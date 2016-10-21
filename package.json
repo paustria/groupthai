@@ -1,0 +1,43 @@
+{
+  "name": "groupthai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "express": "^4.14.0",
+    "font-awesome": "^4.6.3",
+    "font-awesome-webpack": "0.0.4",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.8.1",
+    "react-router-redux": "^4.0.6",
+    "redux": "^3.6.0",
+    "request": "^2.75.0",
+    "webpack": "^1.13.2",
+    "whatwg-fetch": "^1.0.0"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-cli": "^6.14.0",
+    "body-parser": "^1.15.2",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "html-webpack-plugin": "^2.22.0",
+    "node-sass": "^3.10.0",
+    "nodemon": "^1.10.2",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1"
+  },
+  "scripts": {
+    "dev": "nodemon --exec babel-node server.js",
+    "test": "mocha './app/**/*.spec.js' --compilers js:babel-core/register --recursive",
+    "prestart": "babel ./ --out-dir ./prod --ignore app,node_modules,public,webpack.config.js,server.js && ncp ./public ./prod/public && babel ./server.js --out-file ./prod/prod.js",
+    "start": "node ./prod/prod.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
