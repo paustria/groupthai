@@ -13,4 +13,5 @@ ReactDom.render(
             </Route>
             <Route path="*" component={Home}/>
         </Router>,
-    document.getElementById('app'));
+    document.getElementById('app')
+);

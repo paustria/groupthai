@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 // import Navbar from './Navbar';
 
-const Home = ({children}) =>
-    <div className="height-100">
-        This is Home.
-        {children}
-    </div>
+class Home extends Component {
+    render() {
+        return(
+            <div>
+                This is Home.
+                {this.props.children}
+            </div>
+        )
+    }
+}
 
 export default Home;
