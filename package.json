@@ -38,10 +38,10 @@
     "style-loader": "^0.13.1"
   },
   "scripts": {
-    "dev": "nodemon --exec babel-node server.js",
+    "dev": "NODE_ENV=development nodemon --exec babel-node server.js",
     "test": "mocha './app/**/*.spec.js' --compilers js:babel-core/register --recursive",
     "prestart": "babel ./ --out-dir ./prod --ignore app,node_modules,public,webpack.config.js,server.js && ncp ./public ./prod/public && babel ./server.js --out-file ./prod/prod.js",
-    "start": "node ./prod/prod.js"
+    "start": "NODE_ENV=production node ./prod/prod.js"
   },
   "author": "",
   "license": "ISC"
