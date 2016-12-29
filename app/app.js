@@ -5,13 +5,15 @@ import {browserHistory, IndexRedirect, Route, Router} from 'react-router';
 import {Provider} from 'react-redux';
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux';
 
-import Home from './components/Home';
+import App from './components/App';
+
+require('./stylesheets/core.scss');
 
 ReactDom.render(
         <Router>
-            <Route path='/' component={Home}>
+            <Route path='/' component={App}>
             </Route>
-            <Route path="*" component={Home}/>
+            <Route path="*" component={App}/>
         </Router>,
     document.getElementById('app')
 );

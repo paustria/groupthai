@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-// import Navbar from './Navbar';
+import Nav from './Nav';
 
-class Home extends Component {
+class App extends Component {
     render() {
         return(
             <div>
-                This is Home.
+                <Nav/>
                 {this.props.children}
             </div>
         )
     }
 }
 
-export default Home;
+export default App;
