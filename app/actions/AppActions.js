@@ -42,7 +42,7 @@ export function login(username, password) {
         // If no username or password was specified, throw a field-missing error
         if (anyElementsEmpty({ username, password })) {
             requestFailed({
-                type: "field-missing"
+                type: 'field-missing'
             });
             dispatch(sendingRequest(false));
             return;
@@ -68,15 +68,15 @@ export function login(username, password) {
                     // If the login worked, forward the user to the dashboard and clear the form
                     forwardTo('/dashboard');
                     dispatch(changeForm({
-                        username: "",
-                        password: ""
+                        username: '',
+                        password: ''
                     }));
                 } else {
                     requestFailed(err);
                 }
             });
         });
-    }
+    };
 }
 
 /**
@@ -106,7 +106,7 @@ export function register(username, password) {
         // If no username or password was specified, throw a field-missing error
         if (anyElementsEmpty({ username, password })) {
             requestFailed({
-                type: "field-missing"
+                type: 'field-missing'
             });
             dispatch(sendingRequest(false));
             return;
@@ -131,15 +131,15 @@ export function register(username, password) {
                     // If the register worked, forward the user to the homepage and clear the form
                     forwardTo('/dashboard');
                     dispatch(changeForm({
-                        username: "",
-                        password: ""
+                        username: '',
+                        password: ''
                     }));
                 } else {
                     requestFailed(err);
                 }
             });
         });
-    }
+    };
 }
 
 /**
@@ -179,7 +179,7 @@ function forwardTo(location) {
     browserHistory.push(location);
 }
 
-let lastErrType = "";
+let lastErrType = '';
 
 /**
 * Called when a request failes

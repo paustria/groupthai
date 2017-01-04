@@ -39,4 +39,6 @@ app.post('/login', function(req, res) {
 .get('*', (req, res) => {
     return res.sendFile(__dirname + '/public/index.html');
 })
-.listen(app.get('port'), () => console.log('Express server listening on port ' + app.get('port')));
+.listen(app.get('port'),
+    () => console.log('Express server listening on port ' + app.get('port'))
+);

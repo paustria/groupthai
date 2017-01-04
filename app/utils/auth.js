@@ -1,4 +1,3 @@
-// import request from './fakeRequest';
 import * as requests from './http';
 
 /**
@@ -34,27 +33,6 @@ var auth = {
                 callback(false, res.error);
             }
         });
-
-        // request.post('http://localhost:3000/login', {form: {key: 'value'}}, (response) => {
-        //     debugger;
-        //     console.log('tests', response);
-        //     callback(true);
-        // });
-
-        // Post a fake request (see below)
-        // request.post('/login', { username, password }, (response) => {
-        //     // If the user was authenticated successfully, save a random token to the
-        //     // localStorage
-        //     debugger;
-        //     if (response.authenticated) {
-        //         localStorage.token = response.token;
-        //         callback(true);
-        //     } else {
-        //         // If there was a problem authenticating the user, show an error on the
-        //         // form
-        //         callback(false, response.error);
-        //     }
-        // });
     },
     /**
     * Logs the current user out

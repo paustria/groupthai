@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 
 class App extends Component {
     render() {
-        console.log('a', this.props.data.loggedIn);
         return(
             <div>
                 <Nav loggedIn={this.props.data.loggedIn} history={this.props.history} location={this.props.location} dispatch={this.props.dispatch} currentlySending={this.props.data.currentlySending}/>

@@ -4,7 +4,6 @@ export class RequestError extends Error {
     }
 }
 
-
 export class RequestErrorJSON extends Error {
     constructor(message){
         super(message);
@@ -31,7 +30,6 @@ export function get(url, headers) {
     });
 }
 
-
 export function post(url, headers, json) {
     let body = '';
     headers = Object.assign({}, getHeaders(), headers);
@@ -54,7 +52,6 @@ export function post(url, headers, json) {
         return res;
     });
 }
-
 
 export function getJSON(url, headers) {
     return get({url, headers})

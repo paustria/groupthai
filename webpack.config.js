@@ -1,7 +1,6 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin'),
     ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const path = require('path');
 module.exports = {
     entry: ['whatwg-fetch', './app/app.js'],
     output: {

@@ -1,9 +1,8 @@
 /*eslint-disable no-unused-vars*/
 import React, { Component } from 'react';
-/*eslint-enable no-unused-vars*/
 import { Link } from 'react-router';
+/*eslint-enable no-unused-vars*/
 import { logout } from '../actions/AppActions';
-import { connect } from 'react-redux';
 
 class Nav extends Component {
     render() {
