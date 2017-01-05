@@ -7,8 +7,7 @@
 */
 
 import React, { Component } from 'react';
-import { changeForm } from '../actions/AppActions';
-import { History } from 'react-router';
+import { changeForm } from '../actions';
 import LoadingButton from './LoadingButton.react';
 
 const assign = Object.assign;

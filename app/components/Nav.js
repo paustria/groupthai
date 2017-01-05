@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 /*eslint-enable no-unused-vars*/
-import { logout } from '../actions/AppActions';
+import { logout } from '../actions';
 
 class Nav extends Component {
     render() {
