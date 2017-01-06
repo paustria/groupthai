@@ -7,8 +7,8 @@
 */
 
 import React, { Component } from 'react';
-import { changeForm } from '../actions';
-import LoadingButton from './LoadingButton.react';
+import { changeForm } from 'actions';
+import LoadingButton from 'components/LoadingButton.react';
 
 const assign = Object.assign;
 

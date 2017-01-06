@@ -1,8 +1,8 @@
 /*eslint-disable no-unused-vars*/
 import React, { Component } from 'react';
-import Nav from './Nav';
-/*eslint-enable no-unused-vars*/
 import { connect } from 'react-redux';
+import Nav from 'components/Nav';
+/*eslint-enable no-unused-vars*/
 
 class App extends Component {
     render() {
@@ -15,7 +15,6 @@ class App extends Component {
     }
 }
 
-// Which props do we want to inject, given the global state?
 const mapStateToProps = (state) => ({
     data: state
 });

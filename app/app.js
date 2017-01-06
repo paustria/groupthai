@@ -6,12 +6,12 @@ import {browserHistory, IndexRedirect, Route, Router} from 'react-router';
 import {Provider} from 'react-redux';
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux';
 
-import App from './components/App';
-import Home from './components/pages/Home';
-import Login from './components/pages/Login';
-import NotFound from './components/pages/NotFound';
-import Dashboard from './components/pages/Dashboard';
-import { homeReducer } from './reducers/reducers';
+import App from 'components/App';
+import Home from 'components/pages/Home';
+import Login from 'components/pages/Login';
+import NotFound from 'components/pages/NotFound';
+import Dashboard from 'components/pages/Dashboard';
+import { homeReducer } from 'reducers/reducers';
 
 import './stylesheets/core.scss';
 

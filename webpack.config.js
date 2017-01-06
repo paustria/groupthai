@@ -1,5 +1,6 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin');
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    path = require('path');
 
 module.exports = {
     entry: ['whatwg-fetch', './app/app.js'],
@@ -7,7 +8,11 @@ module.exports = {
         path: './public',
         filename: '/bundle.js'
     },
-    resolve: {},
+    resolve: {
+        root: [
+            path.resolve('./app')
+        ]
+    },
     module: {
         loaders: [
             {

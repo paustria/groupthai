@@ -1,6 +1,6 @@
 /*eslint-disable no-unused-vars*/
 import React from 'react';
-import LoadingIndicator from './LoadingIndicator.react';
+import LoadingIndicator from 'components/LoadingIndicator.react';
 /*eslint-enable no-unused-vars*/
 
 function LoadingButton(props) {

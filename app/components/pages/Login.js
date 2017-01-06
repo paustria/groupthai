@@ -1,8 +1,8 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import Form from '../Form.react';
-import auth from '../../utils/auth';
-import { login } from '../../actions';
+import Form from 'components/Form.react';
+import auth from 'utils/auth';
+import { login } from 'actions';
 
 class Login extends Component {
     render() {

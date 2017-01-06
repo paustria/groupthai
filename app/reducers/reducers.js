@@ -1,7 +1,7 @@
 import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST } from '../constants/AppConstants';
 
 const assign = Object.assign;
-import auth from '../utils/auth';
+import auth from 'utils/auth';
 
 const initialState = {
     formState: {

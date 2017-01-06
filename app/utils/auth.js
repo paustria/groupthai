@@ -1,4 +1,4 @@
-import * as requests from './http';
+import * as requests from 'utils/http';
 
 /**
 * Authentication lib
