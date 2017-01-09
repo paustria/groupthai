@@ -27,10 +27,11 @@ var auth = {
                 localStorage.token = res.token;
                 callback(true);
             } else {
-                // If there was a problem authenticating the user, show an error on the
-                // form
                 callback(false, res.error);
             }
+        })
+        .catch(res => {
+            callback(false, res.message);
         });
     },
     /**
@@ -39,9 +40,6 @@ var auth = {
     logout(callback) {
         localStorage.removeItem('token');
         callback();
-        // request.post('/logout', {}, () => {
-        //     callback(true);
-        // });
     },
     /**
     * Checks if anybody is logged in

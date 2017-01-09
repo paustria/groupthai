@@ -34,7 +34,7 @@ app.post('/login', function(req, res) {
     }
 
     console.log('Failed login.');
-    return res.status(400).json({error: 'Failed login.'});
+    return res.status(401).json({error: 'Failed login.'});
 })
 .get('*', (req, res) => {
     return res.sendFile(__dirname + '/public/index.html');

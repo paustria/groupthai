@@ -7,27 +7,24 @@ const assign = Object.assign;
 class LoginForm extends Component {
     render() {
         return(
-            <form className="form" onSubmit={this._onSubmit.bind(this)}>
-                <div className="form__error-wrapper">
-                    <p className="form__error form__error--username-taken">Sorry, but this username is already taken.</p>
-                    <p className="form__error form__error--username-not-registered">This username does not exist.</p>
-                    <p className="form__error form__error--wrong-password">Wrong password.</p>
-                    <p className="form__error form__error--field-missing">Please fill out the entire form.</p>
-                    <p className="form__error form__error--failed">Something went wrong, please try again!</p>
+            <form className="form-horizontal" onSubmit={this._onSubmit.bind(this)}>
+                <div className="form-group">
+                    <label className="col-sm-2 control-label sr-only" htmlFor="username">Username</label>
+                    <div className="col-xs-12">
+                        <input className="form-control" type="text" id="username" value={this.props.data.username} placeholder="username" onChange={this._changeUsername.bind(this)} autoCorrect="off" autoCapitalize="off" spellCheck="false" />
+                    </div>
                 </div>
-                <div className="form__field-wrapper">
-                    <input className="form__field-input" type="text" id="username" value={this.props.data.username} placeholder="frank.underwood" onChange={this._changeUsername.bind(this)} autoCorrect="off" autoCapitalize="off" spellCheck="false" />
-                    <label className="form__field-label" htmlFor="username">Username</label>
-                </div>
-                <div className="form__field-wrapper">
-                    <input className="form__field-input" id="password" type="password" value={this.props.data.password} placeholder="••••••••••"  onChange={this._changePassword.bind(this)} />
-                    <label className="form__field-label" htmlFor="password">Password</label>
+                <div className="form-group">
+                    <label className="col-sm-2 control-label sr-only" htmlFor="password">Password</label>
+                    <div className="col-xs-12">
+                        <input className="form-control" id="password" type="password" value={this.props.data.password} placeholder="••••••••••"  onChange={this._changePassword.bind(this)} />
+                    </div>
                 </div>
                 <div className="form__submit-btn-wrapper">
                     {this.props.currentlySending ? (
                         <LoadingButton />
                     ) : (
-                        <button className="form__submit-btn" type="submit">{this.props.btnText}</button>
+                        <button className="btn btn-success" type="submit">{this.props.btnText}</button>
                     )}
                 </div>
             </form>

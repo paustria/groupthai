@@ -7,7 +7,7 @@ import { logout } from 'actions';
 class Nav extends Component {
     render() {
         const navButtons = this.props.loggedIn ? (
-            <li><a href="#" onClick={this._logout.bind(this)}>Logout</a></li>
+            <li><a href="" onClick={this._logout.bind(this)}>Logout</a></li>
         ) : (
             <li><Link href="/login">Login</Link></li>
         );

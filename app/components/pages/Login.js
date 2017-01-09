@@ -9,15 +9,16 @@ class Login extends Component {
         const dispatch = this.props.dispatch;
         const { formState, currentlySending } = this.props.data;
         return (
-            <div className="form-page__wrapper">
-                <div className="form-page__form-wrapper">
-                    <div className="form-page__form-header">
-                        <h2 className="form-page__form-heading">Login</h2>
+            <div className="row">
+                <div className="col-sm-2 col-sm-offset-5">
+                    <div className="text-center">
+                        <h2>Login</h2>
+                        {/* While the form is sending, show the loading indicator,
+                            otherwise show "Log in" on the submit button */}
+                        <div className="form-error alert alert-danger hide"></div>
+                        <Form data={formState} dispatch={dispatch} location={location}
+                            history={this.props.history} onSubmit={this._login.bind(this)} btnText={'Login'} currentlySending={currentlySending}/>
                     </div>
-                    {/* While the form is sending, show the loading indicator,
-                        otherwise show "Log in" on the submit button */}
-                    <Form data={formState} dispatch={dispatch} location={location}
-                        history={this.props.history} onSubmit={this._login.bind(this)} btnText={'Login'} currentlySending={currentlySending}/>
                 </div>
             </div>
         );

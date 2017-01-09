@@ -135,7 +135,9 @@ export function register(username, password) {
                         password: ''
                     }));
                 } else {
-                    requestFailed(err);
+                    requestFailed({
+                        type: 'unauthorized'
+                    });
                 }
             });
         });
@@ -179,35 +181,24 @@ function forwardTo(location) {
     browserHistory.push(location);
 }
 
-let lastErrType = '';
-
 /**
 * Called when a request failes
 * @param  {object} err An object containing information about the error
-* @param  {string} err.type The js-form__err + err.type class will be set on the form
 */
 function requestFailed(err) {
+    const formError = document.querySelector('.form-error');
     // Remove the class of the last error so there can only ever be one
     removeLastFormError();
-    const form = document.querySelector('.form-page__form-wrapper');
-    // And add the respective classes
-    form.classList.add('js-form__err');
-    form.classList.add('js-form__err-animation');
-    form.classList.add('js-form__err--' + err.type);
-    lastErrType = err.type;
-    // Remove the animation class after the animation is finished, so it
-    // can play again on the next error
-    setTimeout(() => {
-        form.classList.remove('js-form__err-animation');
-    }, 150);
+
+    formError.innerText = 'The credentials you entered are incorrect.';
+    formError.classList.remove('hide');
 }
 
 /**
 * Removes the last error from the form
 */
 function removeLastFormError() {
-    const form = document.querySelector('.form-page__form-wrapper');
-    form.classList.remove('js-form__err--' + lastErrType);
+    document.querySelector('.form-error').classList.add('hide');
 }
 
 /**
