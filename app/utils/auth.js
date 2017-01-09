@@ -12,8 +12,7 @@ var auth = {
     * @param  {Function} callback Called after a user was logged in on the remote server
     */
     login(username, password, callback) {
-        // If there is a token in the localStorage, the user already is
-        // authenticated
+        // If there is a token in the localStorage, the user already is authenticated.
         if (this.loggedIn()) {
             callback(true);
             return;

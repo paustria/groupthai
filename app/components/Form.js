@@ -1,14 +1,6 @@
-/**
-* Form.react.js
-*
-* The form with a username and a password input field, both of which are
-* controlled via the application state.
-*
-*/
-
 import React, { Component } from 'react';
 import { changeForm } from 'actions';
-import LoadingButton from 'components/LoadingButton.react';
+import LoadingButton from 'components/LoadingButton';
 
 const assign = Object.assign;
 
