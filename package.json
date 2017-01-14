@@ -28,6 +28,7 @@
     "babel": "^6.5.2",
     "babel-cli": "^6.14.0",
     "babel-eslint": "^7.1.1",
+    "babel-register": "^6.18.0",
     "body-parser": "^1.15.2",
     "css-loader": "^0.26.1",
     "eslint": "^3.12.2",
@@ -40,14 +41,18 @@
     "json-loader": "^0.5.4",
     "node-sass": "^3.10.0",
     "nodemon": "^1.10.2",
+    "parallelshell": "^2.0.0",
     "sass-loader": "^4.0.2",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
+    "clean": "rimraf public",
     "dev": "NODE_ENV=development nodemon --exec babel-node server.js",
     "test": "mocha './app/**/*.spec.js' --compilers js:babel-core/register --recursive",
-    "prestart": "babel ./ --out-dir ./prod --ignore app,node_modules,public,webpack.config.js,server.js && ncp ./public ./prod/public && babel ./server.js --out-file ./prod/prod.js",
-    "start": "NODE_ENV=production node ./prod/prod.js"
+    "prestart": "npm run clean",
+    "start": "parallelshell 'npm run serverside'",
+    "serverside": "webpack && webpack --config webpack.server.config.babel.js && node prod-server.js"
   },
   "author": "",
   "license": "ISC"
