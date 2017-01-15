@@ -10,8 +10,8 @@ import App from 'components/App';
 import Home from 'components/pages/Home';
 import Login from 'components/pages/Login';
 import NotFound from 'components/pages/NotFound';
-import Dashboard from 'components/pages/Dashboard';
-import { homeReducer } from 'reducers/reducers';
+import Dashboard from 'dashboard/components/Dashboard';
+import { homeReducer } from 'reducers';
 
 import './stylesheets/core.scss';
 

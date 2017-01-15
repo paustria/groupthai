@@ -1,4 +1,4 @@
-import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST } from '../constants/AppConstants';
+import { CHANGE_FORM, SET_AUTH, SENDING_REQUEST } from 'constants';
 
 const assign = Object.assign;
 import auth from 'utils/auth';
