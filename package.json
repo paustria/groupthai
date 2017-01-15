@@ -48,7 +48,7 @@
   },
   "scripts": {
     "clean": "rimraf public",
-    "dev": "NODE_ENV=development nodemon --exec babel-node server.js",
+    "dev": "NODE_ENV=development nodemon --exec babel-node ./src/server/index.js",
     "test": "mocha './app/**/*.spec.js' --compilers js:babel-core/register --recursive",
     "prestart": "npm run clean",
     "start": "parallelshell 'npm run serverside'",

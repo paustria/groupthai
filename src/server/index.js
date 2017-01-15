@@ -1,13 +1,14 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import genSalt from './src/client/utils/salt';
+import genSalt from '../client/utils/salt';
 import bodyParser from 'body-parser';
+import { dirname } from '../../config';
 
 const app = express();
 const salt = bcrypt.genSaltSync(10);
 
 app.set('port', process.env.PORT || 3000)
-    .use(express.static(__dirname + '/public'))
+    .use(express.static(dirname + '/public'))
     .use(bodyParser.json());
 
 // Initialize
@@ -37,7 +38,7 @@ app.post('/login', function(req, res) {
     return res.status(401).json({error: 'Failed login.'});
 })
 .get('*', (req, res) => {
-    return res.sendFile(__dirname + '/public/index.html');
+    return res.sendFile(dirname + '/public/index.html');
 })
 .listen(app.get('port'),
     () => console.log('Express server listening on port ' + app.get('port'))

@@ -1,7 +1,8 @@
 import nodeExternals from 'webpack-node-externals';
+import path from 'path';
 
 export default {
-    entry: './server.js',
+    entry: './src/server/index.js',
     target: 'node',
     node: {
         __dirname: false,
@@ -10,6 +11,11 @@ export default {
     externals: [nodeExternals()],
     output: {
         filename: './prod-server.js'
+    },
+    resolve: {
+        root: [
+            path.resolve('./src/server')
+        ]
     },
     module: {
         loaders: [
