@@ -3,14 +3,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin'),
     path = require('path');
 
 module.exports = {
-    entry: ['whatwg-fetch', './app/app.js'],
+    entry: ['whatwg-fetch', './src/client/index.js'],
     output: {
         path: './public',
         filename: '/bundle.js'
     },
     resolve: {
         root: [
-            path.resolve('./app')
+            path.resolve('./src/client')
         ]
     },
     module: {
@@ -42,7 +42,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: 'app/index.html'
+            template: 'src/client/index.html'
         }),
         new ExtractTextPlugin('/css/core.css')
     ]

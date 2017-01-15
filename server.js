@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import genSalt from './app/utils/salt';
+import genSalt from './src/client/utils/salt';
 import bodyParser from 'body-parser';
 
 const app = express();
