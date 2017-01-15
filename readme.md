@@ -36,6 +36,5 @@ npm run test
 
 ### For running on production.
 ```
-webpack
-npm run start
+npm start
 ```
