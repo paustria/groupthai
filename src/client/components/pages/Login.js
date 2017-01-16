@@ -18,6 +18,7 @@ class Login extends Component {
                         <div className="form-error alert alert-danger hide"></div>
                         <Form data={formState} dispatch={dispatch} location={location}
                             history={this.props.history} onSubmit={this._login.bind(this)} btnText={'Login'} currentlySending={currentlySending}/>
+                        <a href="/auth/facebook">Test facebook login</a>
                     </div>
                 </div>
             </div>
