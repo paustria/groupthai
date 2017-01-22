@@ -4,6 +4,7 @@ import genSalt from '../client/utils/salt';
 import bodyParser from 'body-parser';
 import { dirname } from '../../config';
 require('dotenv').config();
+import User from '../models/user';
 
 //
 // const app = express();
@@ -49,7 +50,6 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
-//const User = mongoose.model('User');
 
 const app = express();
 const salt = bcrypt.genSaltSync(10);
@@ -72,17 +72,19 @@ const users = {
 
 // TODO: YUI
 // used to serialize the user for the session
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function(user, cb) {
     done(null, user.id);
 });
 
 // used to deserialize the user
-passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function(id, cb) {
     // User.findById(id, function(err, user) {
     //     done(err, user);
     // });
 });
 
+// mongoose
+mongoose.connect('mongodb://localhost:27017/groupthai');
 
 // TODO: keep id and secret in file
 
@@ -92,12 +94,13 @@ const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 passport.use(new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: '/auth/facebook/callback'
+    callbackURL: '/auth/facebook/callback',
+    profileFields: ['id', 'displayName', 'first_name', 'last_name']
 },
 function(accessToken, refreshToken, profile, cb) {
-    //   User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-    //       return cb(err, user);
-    //   });
+    User.findOrCreate(profile, accessToken, function (err, user) {
+        return cb(err, user);
+    });
     console.log('Successfully login.');
     return cb(null, profile);
     //         return res.status(200).json({authenticated: true, token: 'thisIsToken'});
