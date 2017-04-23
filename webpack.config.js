@@ -4,34 +4,39 @@ var HtmlWebpackPlugin = require('html-webpack-plugin'),
 
 module.exports = {
     entry: ['whatwg-fetch', './src/client/index.js'],
+    devtool: 'inline-source-map',
     output: {
-        path: './public',
-        filename: '/bundle.js'
+        path: path.join(__dirname, 'public'),
+        filename: 'bundle.js'
     },
     resolve: {
-        root: [
-            path.resolve('./src/client')
+        modules: [
+            path.join(__dirname, 'src/client'),
+            'node_modules'
         ]
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel'
+                use: ['babel-loader']
             },
             {
                 test: /\.scss$/,
-                loader: ExtractTextPlugin.extract(
-                    'style',
-                    'css!sass')
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader', 'sass-loader']
+                })
             },
             {
-                test: /\.json$/,
-                loader: 'json-loader'
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: ['url-loader?limit=10000&minetype=application/font-woff']
             },
-            { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&minetype=application/font-woff' },
-            { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loaderj' }
+            {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: ['file-loaderj']
+            }
         ]
     },
     node: {

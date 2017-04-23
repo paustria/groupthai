@@ -12,13 +12,13 @@
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
     "babel-register": "^6.18.0",
-    "bcryptjs": "^2.4.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.15.2",
     "bootstrap-sass": "^3.3.7",
     "css-loader": "^0.26.1",
     "dotenv": "^4.0.0",
     "express": "^4.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^2.1.0",
     "font-awesome": "^4.6.3",
     "font-awesome-webpack": "0.0.4",
     "html-webpack-plugin": "^2.22.0",
@@ -38,7 +38,6 @@
     "redux-thunk": "^2.1.0",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
-    "webpack": "^1.13.2",
     "webpack-node-externals": "^1.5.4",
     "whatwg-fetch": "^1.0.0"
   },
@@ -48,7 +47,8 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.8.0",
-    "nodemon": "^1.10.2"
+    "nodemon": "^1.10.2",
+    "webpack": "^2.4.1"
   },
   "scripts": {
     "clean": "rimraf public",
@@ -56,7 +56,7 @@
     "test": "mocha './app/**/*.spec.js' --compilers js:babel-core/register --recursive",
     "prestart": "npm run clean",
     "start": "parallelshell 'npm run serverside'",
-    "serverside": "webpack && webpack --config webpack.server.config.babel.js && node prod-server.js"
+    "serverside": "webpack && webpack --config webpack.server.config.js && node prod-server.js"
   },
   "author": "",
   "license": "ISC"
