@@ -72,7 +72,7 @@ const users = {
 
 // TODO: YUI
 // used to serialize the user for the session
-passport.serializeUser(function(user, cb) {
+passport.serializeUser(function(user, done) {
     done(null, user.id);
 });
 
@@ -103,11 +103,12 @@ passport.use(new FacebookStrategy({
     profileFields: ['id', 'displayName', 'first_name', 'last_name']
 },
 function(accessToken, refreshToken, profile, cb) {
+    console.log('Successfully login from facebook.');
     User.findOrCreate(profile, accessToken, function (err, user) {
         return cb(err, user);
     });
-    console.log('Successfully login.');
-    return cb(null, profile);
+
+    // return cb(null, profile);
     //         return res.status(200).json({authenticated: true, token: 'thisIsToken'});
 }
 ));
@@ -153,3 +154,16 @@ app.post('/login', function(req, res) {
 .listen(app.get('port'),
     () => console.log('Express server listening on port ' + app.get('port'))
 );
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+function loggedIn(req, res, next) {
+    if (req.user) {
+        next();
+    } else {
+        res.redirect('/login');
+    }
+}
