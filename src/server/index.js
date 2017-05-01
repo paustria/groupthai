@@ -84,7 +84,12 @@ passport.deserializeUser(function(id, cb) {
 });
 
 // mongoose
-mongoose.connect('mongodb://localhost:27017/groupthai');
+const MONGODB = {
+    uri: process.env.MONGODB_URI ||
+        'mongodb://localhost:27017/groupthai'
+};
+
+mongoose.connect(MONGODB.uri);
 
 // TODO: keep id and secret in file
 
