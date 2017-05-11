@@ -2,6 +2,9 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import genSalt from '../client/utils/salt';
 import bodyParser from 'body-parser';
+import mongoose from 'mongoose';
+import passport from 'passport';
+import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { dirname } from '../../config';
 require('dotenv').config();
 import User from '../models/user';
@@ -47,9 +50,6 @@ import User from '../models/user';
 //     () => console.log('Express server listening on port ' + app.get('port'))
 // );
 //
-const mongoose = require('mongoose');
-const passport = require('passport');
-const FacebookStrategy = require('passport-facebook').Strategy;
 
 // const app = express();
 const app = module.exports = express();
@@ -69,16 +69,18 @@ const users = {
     [username]: bcrypt.hashSync(password, salt)
 };
 
-// mongoose
+/**
+ * Mongoose
+ */
 const MONGODB = {
     uri: process.env.MONGODB_URI ||
         'mongodb://localhost:27017/groupthai'
 };
-
 mongoose.connect(MONGODB.uri);
 
-// TODO: keep id and secret in file
-
+/**
+ * Facebook auth
+ */
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 
@@ -111,20 +113,9 @@ passport.deserializeUser(function(id, done) { // used to deserialize the user
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-// Call FB
-// Retrieve data from FB:- FB_ID, Name, Location....
-///////// Check if FB_ID exists in DB
-///////// Save to MongoDB
-// Push to users array.
-// Send back to client.
-
-const doesUserExist = (user) => {
-    // TODO: check in DB.
-    if (users[user]) return true;
-    return false;
-};
-
+/**
+ * Login facebook endpoint
+ */
 app.get('/auth/facebook',
     passport.authenticate('facebook'));
 
@@ -157,6 +148,23 @@ app.get('/dashboard', ensureAuthenticated, function(req, res){
     });
 });
 
+function ensureAuthenticated(req, res, next) {
+    console.log('req.isAuthenticated='+req.isAuthenticated())
+    // console.log('req.session.passport.user='+req.session.passport.user)
+
+    if (req.isAuthenticated()) { return next(); }
+    res.redirect('/');
+}
+
+/**
+ * Login endpoint
+ */
+const doesUserExist = (user) => {
+    // TODO: check in DB.
+    if (users[user]) return true;
+    return false;
+};
+
 app.post('/login', function(req, res) {
     const account = req.body;
 
@@ -179,11 +187,3 @@ app.get('/logout', function(req, res){
     req.logout();
     res.redirect('/');
 });
-
-function ensureAuthenticated(req, res, next) {
-    console.log('req.isAuthenticated='+req.isAuthenticated())
-    // console.log('req.session.passport.user='+req.session.passport.user)
-
-    if (req.isAuthenticated()) { return next(); }
-    res.redirect('/');
-}
