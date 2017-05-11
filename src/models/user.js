@@ -7,28 +7,57 @@ var userSchema = mongoose.Schema({
         id: String,
         token: String,
         email: String,
-        name: String,
         username: String,
-    }
+    },
+    name: { type: String, required: true }
 });
 
 userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
     var thisSchema = this;
 
-    this.findOne({ 'facebook.id': profile.id }, function(err, user) {
-        if (err)
-            return cb(err);
-        if (user) {
-            console.log('Found user.');
-            return cb(null, user);
-        } else {
+    // this.findOne({ 'facebook.id': profile.id }, function(err, user) {
+    //     if (err)
+    //         return cb(err);
+    //     if (user) {
+    //         console.log('Found user.');
+    //         // check if name change
+    //         return cb(null, user);
+    //     } else {
+    //         var newUser = new thisSchema(
+    //             {
+    //                 facebook: {
+    //                     id: profile.id,
+    //                     token: token
+    //                 },
+    //                 name: profile.name.givenName + ' ' + profile.name.familyName
+    //             }
+    //         );
+    //
+    //         newUser.save(function(err) {
+    //             if (err)
+    //                 throw err;
+    //             return cb(null, newUser);
+    //         });
+    //
+    //         console.log('Created new user.');
+    //     }
+    // });
+
+    var fullName = profile.name.givenName + ' ' + profile.name.familyName;
+    this.findOneAndUpdate({ 'facebook.id': profile.id }, { $set:{ name: fullName } }, function(err, user) {
+        // Handle the error using the Express error middleware
+        if(err) return cb(err);
+
+        // Create new user if not exists
+        if(!user) {
             var newUser = new thisSchema(
                 {
                     facebook: {
                         id: profile.id,
                         token: token,
-                        name: profile.name.givenName + ' ' + profile.name.familyName
-                    }
+                        email: (profile.emails[0].value || '').toLowerCase()
+                    },
+                    name: profile.name.givenName + ' ' + profile.name.familyName
                 }
             );
 
@@ -40,6 +69,9 @@ userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
 
             console.log('Created new user.');
         }
+
+        console.log('Found user. profile='+profile.id+', token='+ token+', user='+ user);
+        return cb(null, user);
     });
 };
 
