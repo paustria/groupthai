@@ -70,7 +70,6 @@ userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
             console.log('Created new user.');
         }
 
-        console.log('Found user. profile='+profile.id+', token='+ token+', user='+ user);
         return cb(null, user);
     });
 };

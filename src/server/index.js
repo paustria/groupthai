@@ -1,5 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
+import session from 'express-session'
 import genSalt from '../client/utils/salt';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
@@ -8,6 +9,8 @@ import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { dirname } from '../../config';
 require('dotenv').config();
 import User from '../models/user';
+import JobPosting from '../models/jobposting';
+
 
 //
 // const app = express();
@@ -51,8 +54,7 @@ import User from '../models/user';
 // );
 //
 
-// const app = express();
-const app = module.exports = express();
+export const app = express();
 const salt = bcrypt.genSaltSync(10);
 
 app.set('port', process.env.PORT || 3000)
@@ -94,18 +96,34 @@ const facebookStrategy = new FacebookStrategy({
     function(accessToken, refreshToken, profile, done) {
         console.log('Successfully login from facebook.');
         User.findOrCreate(profile, accessToken, function (err, user) {
-            console.log('findOrCreate', err, user);
+            // console.log('findOrCreate', err, user);
             return done(err, user);
         });
     }
 );
+
+// required for passport session
+// TODO use store
+app.use(session({
+    secret: 'secrettexthere',
+    saveUninitialized: true,
+    resave: true
+    // using store session on MongoDB using express-session + connect
+    // store: new MongoStore({
+    //     url: config.urlMongo,
+    //     collection: 'sessions'
+    // })
+}));
+
 passport.use(facebookStrategy);
 passport.serializeUser(function(user, done) { // used to serialize the user for the session
+    console.log(`Serialize user id= ${user.id}`);
     done(null, user.id);
 });
 passport.deserializeUser(function(id, done) { // used to deserialize the user
+    console.log(`Deserialize user id= ${id}`);
     User.findById(id, function(err, user){
-        console.log(user);
+        console.log(`user found by id`);
         if(!err) done(null, user);
         else done(err, null);
     });
@@ -123,6 +141,7 @@ app.get('/auth/callback/facebook',
     passport.authenticate('facebook', { failureRedirect: '/' }),
     // on success
     function(req, res) {
+        // TODO need work on front end to check login status
         res.redirect('/dashboard');
     },
     // on error; likely to be something FacebookTokenError token invalid or already used token,
@@ -137,17 +156,6 @@ app.get('/auth/callback/facebook',
     }
 );
 
-app.get('/dashboard', ensureAuthenticated, function(req, res){
-    console.log('path=/account, req.session.passport.user=' + req.session.passport.user);
-    User.findById(req.session.passport.user, function(err, user) {
-        if(err) {
-            console.log(err);  // handle errors
-        } else {
-            res.render('account', { user: user });
-        }
-    });
-});
-
 function ensureAuthenticated(req, res, next) {
     console.log('req.isAuthenticated='+req.isAuthenticated())
     // console.log('req.session.passport.user='+req.session.passport.user)
@@ -155,6 +163,8 @@ function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
     res.redirect('/');
 }
+
+require('./api/jobs');
 
 /**
  * Login endpoint
@@ -164,6 +174,11 @@ const doesUserExist = (user) => {
     if (users[user]) return true;
     return false;
 };
+
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect('/');
+});
 
 app.post('/login', function(req, res) {
     const account = req.body;
@@ -182,8 +197,3 @@ app.post('/login', function(req, res) {
 .listen(app.get('port'),
     () => console.log('Express server listening on port ' + app.get('port'))
 );
-
-app.get('/logout', function(req, res){
-    req.logout();
-    res.redirect('/');
-});
