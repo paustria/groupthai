@@ -8,8 +8,7 @@ import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { dirname } from '../../config';
 require('dotenv').config();
-import User from '../models/user';
-import JobPosting from '../models/jobposting';
+import User from './models/user';
 
 
 //
@@ -90,7 +89,7 @@ const facebookStrategy = new FacebookStrategy({
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
         callbackURL: '/auth/callback/facebook',
-        profileFields: ['id', 'displayName', 'first_name', 'last_name'],
+        profileFields: ['id', 'displayName', 'first_name', 'last_name', 'emails'],
         enableProof: true
     },
     function(accessToken, refreshToken, profile, done) {
@@ -135,6 +134,7 @@ app.use(passport.session());
  * Login facebook endpoint
  */
 app.get('/auth/facebook',
+    // passport.authenticate('facebook', { scope: ['email']}));
     passport.authenticate('facebook'));
 
 app.get('/auth/callback/facebook',
@@ -142,6 +142,7 @@ app.get('/auth/callback/facebook',
     // on success
     function(req, res) {
         // TODO need work on front end to check login status
+        console.log('success auth callback');
         res.redirect('/dashboard');
     },
     // on error; likely to be something FacebookTokenError token invalid or already used token,
@@ -150,8 +151,8 @@ app.get('/auth/callback/facebook',
         // You could put your own behavior in here, fx: you could force auth again...
         // res.redirect('/auth/facebook/');
         if(err) {
-            res.status(400);
-            res.render('error', {message: err.message});
+            console.log('sth wrong ', err.message);
+            res.status(400).json({message: err.message});
         }
     }
 );
@@ -176,6 +177,7 @@ const doesUserExist = (user) => {
 };
 
 app.get('/logout', function(req, res){
+    console.log("Loggin out ",req.user);
     req.logout();
     res.redirect('/');
 });

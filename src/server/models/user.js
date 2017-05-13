@@ -9,7 +9,12 @@ var userSchema = mongoose.Schema({
         email: String,
         username: String,
     },
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    role: {
+        type: String,
+        enum: ['Client', 'Manager', 'Admin'],
+        default: 'Client'
+    }
 });
 
 userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
@@ -69,8 +74,9 @@ userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
 
             console.log('Created new user.');
         }
-
-        return cb(null, user);
+        else {
+            return cb(null, user);
+        }
     });
 };
 
