@@ -1,4 +1,5 @@
 import * as requests from 'utils/http';
+import Cookies from 'js-cookie';
 
 /**
 * Authentication lib
@@ -12,7 +13,7 @@ var auth = {
     * @param  {Function} callback Called after a user was logged in on the remote server
     */
     login(username, password, callback) {
-        // If there is a token in the localStorage, the user already is authenticated.
+        // If there is a token in the cookies, the user already is authenticated.
         if (this.loggedIn()) {
             callback(true);
             return;
@@ -24,7 +25,7 @@ var auth = {
         })
         .then(res => {
             if (res.authenticated) {
-                localStorage.token = res.token;
+                Cookies.set('token', res.token);
                 callback(true);
             } else {
                 callback(false, res.error);
@@ -38,7 +39,7 @@ var auth = {
     * Logs the current user out
     */
     logout(callback) {
-        localStorage.removeItem('token');
+        Cookies.remove('token');
         callback();
     },
     /**
@@ -46,7 +47,7 @@ var auth = {
     * @return {boolean} True if there is a logged in user, false if there isn't
     */
     loggedIn() {
-        return !!localStorage.token;
+        return !!Cookies.get('token');
     },
     /**
     * Registers a user in the system
