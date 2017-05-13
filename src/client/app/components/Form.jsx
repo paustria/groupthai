@@ -65,10 +65,4 @@ class LoginForm extends Component {
     }
 }
 
-LoginForm.propTypes = {
-    onSubmit: React.PropTypes.func.isRequired,
-    btnText: React.PropTypes.string.isRequired,
-    data: React.PropTypes.object.isRequired
-};
-
 export default LoginForm;
