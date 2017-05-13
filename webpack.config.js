@@ -13,7 +13,8 @@ module.exports = {
         modules: [
             path.join(__dirname, 'src/client'),
             'node_modules'
-        ]
+        ],
+        extensions: ['.js', '.json', '.jsx']
     },
     module: {
         rules: [

@@ -1,13 +1,21 @@
 import React, { Component} from 'react';
 import { connect } from 'react-redux';
-import Form from 'components/Form';
+import { Redirect } from 'react-router-dom';
+import Form from 'app/components/Form';
 import auth from 'utils/auth';
-import { login } from 'actions';
+import { login } from 'app/actions';
 
 class Login extends Component {
     render() {
         const dispatch = this.props.dispatch;
-        const { formState, currentlySending } = this.props.data;
+        const { formState, currentlySending, loggedIn } = this.props.data.app;
+
+        if (loggedIn) {
+            return (
+                <Redirect to="/dashboard"/>
+            );
+        }
+
         return (
             <div className="row">
                 <div className="col-sm-2 col-sm-offset-5">

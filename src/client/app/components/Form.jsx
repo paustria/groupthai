@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { changeForm } from 'actions';
-import LoadingButton from 'components/LoadingButton';
+import { changeForm } from 'app/actions';
 
 const assign = Object.assign;
 
@@ -22,7 +21,7 @@ class LoginForm extends Component {
                 </div>
                 <div className="form__submit-btn-wrapper">
                     {this.props.currentlySending ? (
-                        <LoadingButton />
+                        <div>Loading...</div>
                     ) : (
                         <button className="btn btn-success" type="submit">{this.props.btnText}</button>
                     )}
