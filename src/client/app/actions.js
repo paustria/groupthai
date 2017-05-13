@@ -1,8 +1,10 @@
+import * as types from './constants';
+
 import bcrypt from 'bcryptjs';
 import { SET_AUTH, CHANGE_FORM, SENDING_REQUEST } from './constants';
 import auth from 'utils/auth';
 import genSalt from 'utils/salt';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
 
 /**
 * Logs an user in
@@ -153,7 +155,7 @@ export function sendingRequest(sending) {
 */
 function forwardTo(location) {
     console.log('forwardTo(' + location + ')');
-    browserHistory.push(location);
+    // browserHistory.push(location);
 }
 
 /**

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { changeForm } from 'actions';
-import LoadingButton from 'components/LoadingButton';
+import { changeForm } from 'app/actions';
 
 const assign = Object.assign;
 
@@ -22,7 +21,7 @@ class LoginForm extends Component {
                 </div>
                 <div className="form__submit-btn-wrapper">
                     {this.props.currentlySending ? (
-                        <LoadingButton />
+                        <div>Loading...</div>
                     ) : (
                         <button className="btn btn-success" type="submit">{this.props.btnText}</button>
                     )}
@@ -65,11 +64,5 @@ class LoginForm extends Component {
         this.props.onSubmit(this.props.data.username, this.props.data.password);
     }
 }
-
-LoginForm.propTypes = {
-    onSubmit: React.PropTypes.func.isRequired,
-    btnText: React.PropTypes.string.isRequired,
-    data: React.PropTypes.object.isRequired
-};
 
 export default LoginForm;
