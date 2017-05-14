@@ -23,11 +23,11 @@ var auth = {
             const response = await requests.post('/login', '', { username, password })
             const body = await response.json();
 
-            if (res.authenticated) {
-                Cookies.set('token', res.token);
+            if (body.authenticated) {
+                Cookies.set('token', body.token);
                 callback(true);
             } else {
-                callback(false, res.error);
+                callback(false, body.error);
             }
         } catch (err) {
             var e = err;
