@@ -5,6 +5,10 @@ import {
     Switch,
     Route
 } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// Needed for onTouchTap
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 import Home from './Home';
 import Nav from './Nav';
@@ -32,17 +36,19 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 };
 
 const App = () => (
-    <BrowserRouter>
-        <div>
-            <Nav />
-            <Switch>
-                <Route exact path="/" component={Home} />
-                <Route exact path="/login" component={Login}/>
-                <PrivateRoute path="/dashboard" component={Dashboard} />
-                <Route component={NotFound}/>
-            </Switch>
-        </div>
-    </BrowserRouter>
+    <MuiThemeProvider>
+        <BrowserRouter>
+            <div>
+                <Nav />
+                <Switch>
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/login" component={Login}/>
+                    <PrivateRoute path="/dashboard" component={Dashboard} />
+                    <Route component={NotFound}/>
+                </Switch>
+            </div>
+        </BrowserRouter>
+    </MuiThemeProvider>
 );
 
 export default App;
