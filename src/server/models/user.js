@@ -60,7 +60,7 @@ userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
                     facebook: {
                         id: profile.id,
                         token: token,
-                        email: (profile.emails[0].value || '').toLowerCase()
+                        email: profile.emails ? (profile.emails[0].value || '').toLowerCase() : ''
                     },
                     name: profile.name.givenName + ' ' + profile.name.familyName
                 }
