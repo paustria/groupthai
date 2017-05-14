@@ -3,7 +3,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin'),
     path = require('path');
 
 module.exports = {
-    entry: ['whatwg-fetch', './src/client/index.js'],
+    entry: ['babel-polyfill', 'whatwg-fetch', './src/client/index.js'],
     devtool: 'inline-source-map',
     output: {
         path: path.join(__dirname, 'public'),
