@@ -5,34 +5,28 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import app from 'app';
 
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
+
+const styles = {
+    uploadInput: {
+        color: 'white'
+    }
+};
+
 const Nav = withRouter(({loggedIn, logout}) => {
-    const navButtons = loggedIn ? (
-        <li><a href="" onClick={logout}>Logout</a></li>
+    const navButton = loggedIn ? (
+        <a href="" onClick={logout}>Logout</a>
     ) : (
-        <li><Link to="/login">Login</Link></li>
+        <FlatButton label="Log in" href="/login" />
     );
 
     return (
-        <nav className="navbar navbar-default">
-            <div className="container-fluid">
-                <div className="navbar-header">
-                    <button className="navbar-toggle collapsed"
-                        data-toggle="collapse"
-                        data-target="#navbar-collapse">
-                        <span className="sr-only">Toggle Navigation</span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                    </button>
-                    <a className="navbar-brand" href="/">Brand</a>
-                </div>
-                <div className="collapse navbar-collapse" id="navbar-collapse">
-                    <ul className="nav navbar-nav navbar-right">
-                        {navButtons}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <AppBar
+            title={<FlatButton label="GroupThai กลุ่มคนไทย" href="/" style={styles.uploadInput} />}
+            iconElementRight={navButton}
+            showMenuIconButton={false}
+        />
     );
 });
 
