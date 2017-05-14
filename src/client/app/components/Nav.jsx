@@ -3,10 +3,11 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 /*eslint-enable no-unused-vars*/
 import { connect } from 'react-redux';
+import app from 'app';
 
-const Nav = withRouter(({user}) => {
-    const navButtons = user ? (
-        <li><a href="" onClick="">Logout</a></li>
+const Nav = withRouter(({loggedIn, logout}) => {
+    const navButtons = loggedIn ? (
+        <li><a href="" onClick={logout}>Logout</a></li>
     ) : (
         <li><Link to="/login">Login</Link></li>
     );
@@ -37,7 +38,12 @@ const Nav = withRouter(({user}) => {
 
 const mapStateToProps = state => ({
     // user: state.app.user
-    user: null
+    user: null,
+    loggedIn: state.app.loggedIn
 });
 
-export default connect(mapStateToProps)(Nav);
+const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch(app.actions.logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);
