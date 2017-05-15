@@ -5,70 +5,18 @@ import genSalt from '../client/utils/salt';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { dirname } from '../../config';
 require('dotenv').config();
 import User from './models/user';
 
-
-//
-// const app = express();
-// const salt = bcrypt.genSaltSync(10);
-//
-// app.set('port', process.env.PORT || 3000)
-//     .use(express.static(dirname + '/public'))
-//     .use(bodyParser.json());
-//
-// // Initialize
-// const username = 'phily';
-// const usernameSalt = genSalt(username);
-//
-// const password = bcrypt.hashSync('password123', usernameSalt);
-// const users = {
-//     [username]: bcrypt.hashSync(password, salt)
-// };
-//
-// const doesUserExist = (user) => {
-//     // TODO: check in DB.
-//     if (users[user]) return true;
-//     return false;
-// };
-//
-// app.post('/login', function(req, res) {
-//     const account = req.body;
-//
-//     if (doesUserExist && bcrypt.compareSync(account.password, users[username])) {
-//         console.log('Successfully login.');
-//         return res.status(200).json({authenticated: true, token: 'thisIsToken'});
-//     }
-//
-//     console.log('Failed login.');
-//     return res.status(401).json({error: 'Failed login.'});
-// })
-// .get('*', (req, res) => {
-//     return res.sendFile(dirname + '/public/index.html');
-// })
-// .listen(app.get('port'),
-//     () => console.log('Express server listening on port ' + app.get('port'))
-// );
-//
-
 export const app = express();
-const salt = bcrypt.genSaltSync(10);
 
 app.set('port', process.env.PORT || 3000)
     .use(express.static(dirname + '/public'))
     .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended: false }));
-
-// Initialize
-const username = 'phily';
-const usernameSalt = genSalt(username);
-
-const password = bcrypt.hashSync('password123', usernameSalt);
-const users = {
-    [username]: bcrypt.hashSync(password, salt)
-};
+    .use(bodyParser.urlencoded({ extended: true }));
 
 /**
  * Mongoose
@@ -78,6 +26,25 @@ const MONGODB = {
         'mongodb://localhost:27017/groupthai'
 };
 mongoose.connect(MONGODB.uri);
+
+/**
+ * Local auth
+ */
+const localStrategy = new LocalStrategy(function(username, password, done) {
+    User.findOne({ 'local.username' : username }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+            console.log('user not found. user=',username);
+            return done(null, false,{message: 'User not found.'});
+        }
+        if (!user.verifyPassword(password)) {
+            console.log('invalid password. user=', username);
+            return done(null, false, {message: 'Invalid password.'});
+        }
+        return done(null, user);
+    });
+});
+passport.use(localStrategy);
 
 /**
  * Facebook auth
@@ -95,7 +62,6 @@ const facebookStrategy = new FacebookStrategy({
     function(accessToken, refreshToken, profile, done) {
         console.log('Successfully login from facebook.');
         User.findOrCreate(profile, accessToken, function (err, user) {
-            // console.log('findOrCreate', err, user);
             return done(err, user);
         });
     }
@@ -107,22 +73,16 @@ app.use(session({
     secret: 'secrettexthere',
     saveUninitialized: true,
     resave: true
-    // using store session on MongoDB using express-session + connect
-    // store: new MongoStore({
-    //     url: config.urlMongo,
-    //     collection: 'sessions'
-    // })
 }));
 
 passport.use(facebookStrategy);
 passport.serializeUser(function(user, done) { // used to serialize the user for the session
-    console.log(`Serialize user id= ${user.id}`);
+    // console.log(`Serialize user id= ${user.id}`);
     done(null, user.id);
 });
 passport.deserializeUser(function(id, done) { // used to deserialize the user
-    console.log(`Deserialize user id= ${id}`);
+    // console.log(`Deserialize user id= ${id}`);
     User.findById(id, function(err, user){
-        console.log(`user found by id`);
         if(!err) done(null, user);
         else done(err, null);
     });
@@ -134,37 +94,38 @@ app.use(passport.session());
  * Login facebook endpoint
  */
 app.get('/auth/facebook',
-    // passport.authenticate('facebook', { scope: ['email']}));
     passport.authenticate('facebook'));
 
 app.get('/auth/callback/facebook',
     passport.authenticate('facebook', { failureRedirect: '/' }),
     // on success
     function(req, res) {
-        // TODO need work on front end to check login status
-        console.log('success auth callback');
-        res.redirect('/dashboard');
+        return res.status(200);
     },
     // on error; likely to be something FacebookTokenError token invalid or already used token,
     // these errors occur when the user logs in twice with the same token
     function(err,req,res,next) {
-        // You could put your own behavior in here, fx: you could force auth again...
-        // res.redirect('/auth/facebook/');
         if(err) {
-            console.log('sth wrong ', err.message);
-            res.status(400).json({message: err.message});
+            // console.log('sth wrong ', err.message);
+            return res.status(400).json({message: err.message});
         }
     }
 );
 
+app.get('/profile', ensureAuthenticated, function(req, res) {
+    return res.status(200).json({ user : res.user });
+});
+
 function ensureAuthenticated(req, res, next) {
-    console.log('req.isAuthenticated='+req.isAuthenticated())
     // console.log('req.session.passport.user='+req.session.passport.user)
 
     if (req.isAuthenticated()) { return next(); }
-    res.redirect('/');
+    return res.status(401).json({ message:"User is not authorized."});
 }
 
+/**
+ * Routes
+ */
 require('./api/jobs');
 
 /**
@@ -176,23 +137,51 @@ const doesUserExist = (user) => {
     return false;
 };
 
+app.post('/register', function (req, res) {
+    // TODO require name and email
+    const { username, password } = req.body;
+    const salt = genSalt(username.toLowerCase());
+    bcrypt.hash(password, salt, (err, hash) => {
+        if (err)
+            return res.status(500).json({ error: true });
+        const user = new User({
+            name: username,
+            local: { username: username, password: hash }
+        });
+        user.save(function(err) {
+            if (err) {
+                console.log('Error while create new user :',err);
+                return res.status(500).send('Internal Server Error.');
+            }
+            console.log('Create new user');
+            req.login(user, function(err) {
+                if (err) {
+                    console.log('Error while login :',err);
+                    return res.status(401).send(err);
+                }
+                console.log('Login Successfully');
+                return res.redirect('/dashboard');
+            });
+        });
+    });
+});
 app.get('/logout', function(req, res){
-    console.log("Loggin out ",req.user);
+    // console.log("Log out ",req.user);
     req.logout();
     res.redirect('/');
 });
 
-app.post('/login', function(req, res) {
-    const account = req.body;
-
-    if (doesUserExist && bcrypt.compareSync(account.password, users[username])) {
-        console.log('Successfully login.');
-        return res.status(200).json({authenticated: true, token: 'thisIsToken'});
+app.post('/login',
+    passport.authenticate('local'),
+    function(req, res) {
+        if (req.user) {
+            return res.status(200).json({authenticated: true});
+        }
+        else {
+            return res.status(401).json({error: 'Failed login.'});
+        }
     }
-
-    console.log('Failed login.');
-    return res.status(401).json({error: 'Failed login.'});
-})
+)
 .get('*', (req, res) => {
     return res.sendFile(dirname + '/public/index.html');
 })

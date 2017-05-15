@@ -1,5 +1,7 @@
 // models/user.js
-var mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import genSalt from '../../client/utils/salt';
+import bcrypt from 'bcryptjs';
 
 // define the schema for our user model
 var userSchema = mongoose.Schema({
@@ -8,45 +10,27 @@ var userSchema = mongoose.Schema({
         token: String,
         email: String,
         username: String,
+        display_name: String
     },
     name: { type: String, required: true },
+    local: {
+        username: { type: String, unique: true },
+        password: String,
+        email: String
+    },
     role: {
         type: String,
-        enum: ['Client', 'Manager', 'Admin'],
+        enum: ['Client', 'Moderator', 'Admin'],
         default: 'Client'
     }
 });
 
+userSchema.methods.verifyPassword = function (password) {
+    return password.localeCompare(this.local.password) == 0;
+};
+
 userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb){
     var thisSchema = this;
-
-    // this.findOne({ 'facebook.id': profile.id }, function(err, user) {
-    //     if (err)
-    //         return cb(err);
-    //     if (user) {
-    //         console.log('Found user.');
-    //         // check if name change
-    //         return cb(null, user);
-    //     } else {
-    //         var newUser = new thisSchema(
-    //             {
-    //                 facebook: {
-    //                     id: profile.id,
-    //                     token: token
-    //                 },
-    //                 name: profile.name.givenName + ' ' + profile.name.familyName
-    //             }
-    //         );
-    //
-    //         newUser.save(function(err) {
-    //             if (err)
-    //                 throw err;
-    //             return cb(null, newUser);
-    //         });
-    //
-    //         console.log('Created new user.');
-    //     }
-    // });
 
     var fullName = profile.name.givenName + ' ' + profile.name.familyName;
     this.findOneAndUpdate({ 'facebook.id': profile.id }, { $set:{ name: fullName } }, function(err, user) {
