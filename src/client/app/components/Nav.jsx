@@ -3,41 +3,41 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 /*eslint-enable no-unused-vars*/
 import { connect } from 'react-redux';
+import app from 'app';
 
-const Nav = withRouter(({user}) => {
-    const navButtons = user ? (
-        <li><a href="" onClick="">Logout</a></li>
+import AppBar from 'material-ui/AppBar';
+import FlatButton from 'material-ui/FlatButton';
+
+const styles = {
+    uploadInput: {
+        color: 'white'
+    }
+};
+
+const Nav = withRouter(({loggedIn, logout}) => {
+    const navButton = loggedIn ? (
+        <a href="" onClick={logout}>Logout</a>
     ) : (
-        <li><Link to="/login">Login</Link></li>
+        <FlatButton label="Log in" href="/login" />
     );
 
     return (
-        <nav className="navbar navbar-default">
-            <div className="container-fluid">
-                <div className="navbar-header">
-                    <button className="navbar-toggle collapsed"
-                        data-toggle="collapse"
-                        data-target="#navbar-collapse">
-                        <span className="sr-only">Toggle Navigation</span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                        <span className="icon-bar"></span>
-                    </button>
-                    <a className="navbar-brand" href="/">Brand</a>
-                </div>
-                <div className="collapse navbar-collapse" id="navbar-collapse">
-                    <ul className="nav navbar-nav navbar-right">
-                        {navButtons}
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        <AppBar
+            title={<FlatButton label="GroupThai กลุ่มคนไทย" href="/" style={styles.uploadInput} />}
+            iconElementRight={navButton}
+            showMenuIconButton={false}
+        />
     );
 });
 
 const mapStateToProps = state => ({
     // user: state.app.user
-    user: null
+    user: null,
+    loggedIn: state.app.loggedIn
 });
 
-export default connect(mapStateToProps)(Nav);
+const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch(app.actions.logout())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);

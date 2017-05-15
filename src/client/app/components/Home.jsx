@@ -2,12 +2,14 @@
 import React, { Component } from 'react';
 /*eslint-enable no-unused-vars*/
 import { connect } from 'react-redux';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class Home extends Component {
     render() {
         return(
             <div>
                 This is Home.
+                <RaisedButton label="Default" />
             </div>
         );
     }

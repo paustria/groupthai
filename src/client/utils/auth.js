@@ -12,28 +12,27 @@ var auth = {
     * @param  {string}   password The password of the user
     * @param  {Function} callback Called after a user was logged in on the remote server
     */
-    login(username, password, callback) {
+    async login(username, password, callback) {
         // If there is a token in the cookies, the user already is authenticated.
         if (this.loggedIn()) {
             callback(true);
             return;
         }
 
-        requests.post('/login', '', { username, password })
-        .then(res => {
-            return res.json();
-        })
-        .then(res => {
-            if (res.authenticated) {
-                Cookies.set('token', res.token);
+        try {
+            const response = await requests.post('/login', '', { username, password })
+            const body = await response.json();
+
+            if (body.authenticated) {
+                Cookies.set('token', body.token);
                 callback(true);
             } else {
-                callback(false, res.error);
+                callback(false, body.error);
             }
-        })
-        .catch(res => {
-            callback(false, res.message);
-        });
+        } catch (err) {
+            var e = err;
+            callback(false, err.message);
+        }
     },
     /**
     * Logs the current user out

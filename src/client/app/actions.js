@@ -65,7 +65,6 @@ export function logout() {
         auth.logout(() => {
             dispatch(sendingRequest(false));
             dispatch(setAuthState(false));
-            browserHistory.replace('/');
         });
     };
 }
