@@ -1,5 +1,6 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
     path = require('path');
 
 module.exports = {
@@ -50,6 +51,12 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'src/client/index.html'
         }),
-        new ExtractTextPlugin('/css/core.css')
+        new ExtractTextPlugin('/css/core.css'),
+        new CopyWebpackPlugin([
+            {
+                from: 'src/client/img',
+                to: 'img'
+            }
+        ])
     ]
 };
