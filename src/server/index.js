@@ -191,7 +191,6 @@ function(req, res) {
 }
 )
 .get('*', (req, res) => {
-  console.log('aaa')
   return res.sendFile(dirname + '/public/index.html');
 })
 .listen(app.get('port'),
