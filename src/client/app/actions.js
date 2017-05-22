@@ -14,57 +14,6 @@ export function logout() {
 }
 
 /**
-* Registers a user
-* @param  {string} username The username of the new user
-* @param  {string} password The password of the new user
-*/
-export function register(username, password) {
-  return (dispatch) => {
-    // Show the loading indicator, hide the last error
-    dispatch(sendingRequest(true));
-    removeLastFormError();
-    // If no username or password was specified, throw a field-missing error
-    if (anyElementsEmpty({ username, password })) {
-      requestFailed({
-        type: 'field-missing'
-      });
-      dispatch(sendingRequest(false));
-      return;
-    }
-    // Generate salt for password encryption
-    const salt = genSalt(username);
-    // Encrypt password
-    bcrypt.hash(password, salt, (err, hash) => {
-      // Something wrong while hashing
-      if (err) {
-        requestFailed({
-          type: 'failed'
-        });
-        return;
-      }
-      // Use auth.js to fake a request
-      auth.register(username, hash, (success, err) => {
-        // When the request is finished, hide the loading indicator
-        dispatch(sendingRequest(false));
-        dispatch(setAuthState(success));
-        if (success) {
-          // If the register worked, forward the user to the homepage and clear the form
-          forwardTo('/dashboard');
-          dispatch(changeForm({
-            username: '',
-            password: ''
-          }));
-        } else {
-          requestFailed({
-            type: 'unauthorized'
-          });
-        }
-      });
-    });
-  };
-}
-
-/**
 * Sets the authentication state of the application
 * @param {boolean} newState True means a user is logged in, false means no user is logged in
 */

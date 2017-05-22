@@ -39,6 +39,9 @@ class Login extends Component {
   }
 
   async handleSubmit() {
+    const isRegisterView = this.props.location.pathname === '/register';
+    const url = isRegisterView ? '/register' : '/login';
+
     if(this.validateForm()) {
       const options = {
         method: 'POST',
@@ -53,7 +56,7 @@ class Login extends Component {
       };
 
       try {
-        const response = await fetch('/login', options);
+        const response = await fetch(url, options);
         if(!response.ok) {
           throw Error('Not Authorized');
         }
@@ -61,6 +64,7 @@ class Login extends Component {
         auth.setAuth(true);
         this.props.login(body.user);
       } catch (err) {
+        //TODO - Check error message.
         this.setState({ error: err.message })
       }
     }
@@ -92,6 +96,9 @@ class Login extends Component {
     if (isRegisterView && !this.state.confirmPassword) {
       hasError = true;
       this.setState({confirmPasswordError: 'Please fill out confirmPassword'});
+    } else if (isRegisterView && (this.state.password != this.state.confirmPassword)) {
+      hasError = true;
+      this.setState({confirmPasswordError: 'Password does not match'});
     }
     if (this.state.email && !regexEmail.test(this.state.email)) {
       hasError = true;

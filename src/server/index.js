@@ -170,7 +170,7 @@ app.post('/register', function (req, res) {
           return res.status(401).send(err);
         }
         console.log('Login Successfully');
-        return res.redirect('/dashboard');
+        return res.status(200).json({user: user.local});
       });
     });
   });
