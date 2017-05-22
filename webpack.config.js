@@ -1,7 +1,7 @@
 var HtmlWebpackPlugin = require('html-webpack-plugin'),
-ExtractTextPlugin = require('extract-text-webpack-plugin'),
-CopyWebpackPlugin = require('copy-webpack-plugin'),
-path = require('path');
+  ExtractTextPlugin = require('extract-text-webpack-plugin'),
+  CopyWebpackPlugin = require('copy-webpack-plugin'),
+  path = require('path');
 
 module.exports = {
   entry: ['babel-polyfill', 'whatwg-fetch', './src/client/index.js'],
