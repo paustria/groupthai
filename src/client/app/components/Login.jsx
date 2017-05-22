@@ -13,7 +13,7 @@ const initialState = {
   confirmPassword: '',
   emailError: '',
   passwordError: '',
-  confirmPasswordError: '',
+  confirmPasswordError: ''
 };
 
 class Login extends Component {
@@ -64,8 +64,13 @@ class Login extends Component {
         auth.setAuth(true);
         this.props.login(body.user);
       } catch (err) {
-        //TODO - Check error message.
-        this.setState({ error: err.message })
+        let message = err.message;
+
+        if (message === 'Not Authorized') {
+          message = 'Username and/or password combination is incorrect.';
+        }
+
+        this.setState({ emailError: message })
       }
     }
   }
