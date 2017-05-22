@@ -20,10 +20,11 @@ class Login extends Component {
   constructor(props) {
     super(props);
     this.state = initialState;
+    this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
   componentDidMount() {
-    document.addEventListener('keyup', this.handleKeyUp.bind(this));
+    document.addEventListener('keyup', this.handleKeyUp);
   }
 
   componentWillUnmount() {
