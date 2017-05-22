@@ -5,6 +5,7 @@ import genSalt from '../client/utils/salt';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import morgan from 'morgan';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { dirname } from '../../config';
@@ -14,6 +15,7 @@ import User from './models/user';
 export const app = express();
 
 app.set('port', process.env.PORT || 3000)
+.use(morgan('combined'))
 .use(express.static(dirname + '/public'))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true }));
@@ -151,7 +153,7 @@ app.post('/register', function (req, res) {
   const salt = genSalt(username.toLowerCase());
   bcrypt.hash(password, salt, (err, hash) => {
     if (err)
-    return res.status(500).json({ error: true });
+      return res.status(500).json({ error: true });
     const user = new User({
       name: username,
       local: { username: username, password: hash }
@@ -194,5 +196,5 @@ function(req, res) {
   return res.sendFile(dirname + '/public/index.html');
 })
 .listen(app.get('port'),
-() => console.log('Express server listening on port ' + app.get('port'))
+  () => console.log('Express server listening on port ' + app.get('port'))
 );
