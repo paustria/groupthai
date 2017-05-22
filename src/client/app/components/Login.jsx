@@ -37,7 +37,7 @@ class Login extends Component {
         }
     }
 
-    handleSubmit() {
+    async handleSubmit() {
         if(this.validateForm()) {
             const options = {
                 method: 'POST',
@@ -51,19 +51,17 @@ class Login extends Component {
                 credentials: 'same-origin'
             };
 
-            fetch('/login', options)
-            .then((res)=>{
-                if(!res.ok) {
+            try {
+                const response = await fetch('/login', options);
+                if(!response.ok) {
                     throw Error('Not Authorized');
                 }
-                return res.json();
-            })
-            .then((res) => {
+                const body = await response.json();
                 auth.setAuth(true);
-                this.props.login(res.user);
-            }).catch(err => {
+                this.props.login(body.user);
+            } catch (err) {;
                 this.setState({ error: err.message })
-            });
+            }
         }
     }
 
