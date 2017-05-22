@@ -58,19 +58,17 @@ class Login extends Component {
       try {
         const response = await fetch(url, options);
         if(!response.ok) {
-          throw Error('Not Authorized');
+          if (response.statusText === 'Unauthorized')
+            throw Error('Username and/or password combination is incorrect.');
+          if (response.statusText === 'Forbidden')
+            throw Error('Email is already existed.');
+          throw Error(response.statusText)
         }
         const body = await response.json();
         auth.setAuth(true);
         this.props.login(body.user);
       } catch (err) {
-        let message = err.message;
-
-        if (message === 'Not Authorized') {
-          message = 'Username and/or password combination is incorrect.';
-        }
-
-        this.setState({ emailError: message })
+        this.setState({ emailError: err.message })
       }
     }
   }
