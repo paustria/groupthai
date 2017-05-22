@@ -15,10 +15,26 @@ const styles = {
   }
 };
 
+async function onClickLogout() {
+  try {
+    const logout = this;
+    const response = await fetch('/logout', {});
+
+    if(!response.ok) {
+      throw Error('Not Authorized');
+    }
+    logout();
+    window.location.href = '/';
+  } catch (err) {
+    // TODO: Add error message.
+    // this.setState({ error: err.message })
+  }
+}
+
 const Nav = withRouter(({user, logout}) => {
   const registerBtn = (<Link to="/register"><FlatButton label='Create Account' style={styles.textWhite}/></Link>);
   const navButton = user ? (
-    <div><FlatButton label="Logout" onClick={logout} style={styles.textWhite}/></div>
+    <div><FlatButton label="Logout" onClick={onClickLogout.bind(logout)} style={styles.textWhite}/></div>
   ) : (
     <div><Link to="/login"><FlatButton label='Log in' style={styles.textWhite}/></Link>{registerBtn}</div>
   );
