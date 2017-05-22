@@ -4,12 +4,8 @@ import auth from 'utils/auth';
 
 const initialState = {
     user: null,
-    formState: {
-        username: '',
-        password: ''
-    },
     currentlySending: false,
-    loggedIn: auth.loggedIn()
+    test: false
 };
 
 const app = (state = initialState, action) => {
@@ -20,17 +16,20 @@ const app = (state = initialState, action) => {
             formState: action.newState
         };
 
-    case types.SET_AUTH:
-        return {
-            ...state,
-            loggedIn: action.newState
-        };
-
     case types.SENDING_REQUEST:
         return {
             ...state,
             currentlySending: action.sending
         };
+
+    case types.RECEIVE_USER:
+        return {
+            ...state,
+            user: action.user
+        };
+
+    case types.LOGOUT:
+        return initialState;
 
     default: return state;
     }

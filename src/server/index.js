@@ -37,11 +37,19 @@ const localStrategy = new LocalStrategy(function(username, password, done) {
             console.log('user not found. user=',username);
             return done(null, false,{message: 'User not found.'});
         }
-        if (!user.verifyPassword(password)) {
-            console.log('invalid password. user=', username);
-            return done(null, false, {message: 'Invalid password.'});
-        }
-        return done(null, user);
+
+        const salt = genSalt(username.toLowerCase());
+        bcrypt.hash(password, salt, (err, hash) => {
+            if (err)
+                return res.status(500).json({ error: true });
+
+            if (!user.verifyPassword(hash)) {
+                console.log('invalid password. user=', username);
+                return done(null, false, {message: 'Invalid password.'});
+            }
+
+            return done(null, user);
+        });
     });
 });
 passport.use(localStrategy);
@@ -175,7 +183,7 @@ app.post('/login',
     passport.authenticate('local'),
     function(req, res) {
         if (req.user) {
-            return res.status(200).json({authenticated: true});
+            return res.status(200).json({user: req.user.local});
         }
         else {
             return res.status(401).json({error: 'Failed login.'});
@@ -183,6 +191,7 @@ app.post('/login',
     }
 )
 .get('*', (req, res) => {
+    console.log('aaa')
     return res.sendFile(dirname + '/public/index.html');
 })
 .listen(app.get('port'),

@@ -9,30 +9,32 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 
 const styles = {
-    uploadInput: {
-        color: 'white'
+    textWhite: {
+        color: 'white',
+        textDecoration: 'none'
     }
 };
 
-const Nav = withRouter(({loggedIn, logout}) => {
-    const navButton = loggedIn ? (
-        <a href="" onClick={logout}>Logout</a>
+const Nav = withRouter(({user, logout}) => {
+    const registerBtn = (<Link to="/register"><FlatButton label='Create Account' style={styles.textWhite}/></Link>);
+    const navButton = user ? (
+        <div><FlatButton label="Logout" onClick={logout} style={styles.textWhite}/></div>
     ) : (
-        <FlatButton label="Log in" href="/login" />
+        <div><Link to="/login"><FlatButton label='Log in' style={styles.textWhite}/></Link>{registerBtn}</div>
     );
 
     return (
         <AppBar
-            title={<FlatButton label="GroupThai กลุ่มคนไทย" href="/" style={styles.uploadInput} />}
+            title={<Link to="/" style={styles.textWhite}>GroupThai กลุ่มคนไทย</Link>}
             iconElementRight={navButton}
+            iconStyleRight={styles.navRight}
             showMenuIconButton={false}
         />
     );
 });
 
 const mapStateToProps = state => ({
-    // user: state.app.user
-    user: null,
+    user: state.app.user,
     loggedIn: state.app.loggedIn
 });
 

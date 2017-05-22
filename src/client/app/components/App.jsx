@@ -8,6 +8,7 @@ import {
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // Needed for onTouchTap
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { connect } from 'react-redux';
 injectTapEventPlugin();
 
 import Home from './Home';
@@ -15,11 +16,11 @@ import Nav from './Nav';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import NotFound from './NotFound';
-import auth from 'utils/auth';
+import {auth} from 'utils/auth';
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-    const isLoggedIn = auth.loggedIn();
+    const isLoggedIn = auth.getAuth();
 
     return (
         <Route {...rest} render={props => (
@@ -43,6 +44,7 @@ const App = () => (
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/login" component={Login}/>
+                    <Route exact path="/register" component={Login} view="register"/>
                     <PrivateRoute path="/dashboard" component={Dashboard} />
                     <Route component={NotFound}/>
                 </Switch>
@@ -51,4 +53,9 @@ const App = () => (
     </MuiThemeProvider>
 );
 
-export default App;
+
+const mapStateToProps = state => ({
+    state: state
+});
+
+export default connect(mapStateToProps)(App);
