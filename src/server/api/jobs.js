@@ -2,21 +2,21 @@ import {app} from '../';
 import JobPosting from '../models/jobposting';
 
 app.post('/api/job', (req, res) => {
-    const { title } = req.body;
-    console.log(`Job's title is ${title}.`);
+  const { title } = req.body;
+  console.log(`Job's title is ${title}.`);
 
-    try {
-        // await User.create(
-        JobPosting.create(
-            {
-                title : `${title}`
-            }
-        );
+  try {
+    // await User.create(
+    JobPosting.create(
+      {
+        title : `${title}`
+      }
+    );
 
-        res.sendStatus(200);
-    } catch (err) {
-        res.status(500).send(err.message);
-    }
+    res.sendStatus(200);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 
 });
 

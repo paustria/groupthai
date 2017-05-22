@@ -4,10 +4,10 @@ import Cookies from 'js-cookie';
 let isAuthenticated = false;
 
 export const auth = {
-    setAuth: (isAuth) => {
-        isAuthenticated = isAuth;
-    },
-    getAuth: () => isAuthenticated
+  setAuth: (isAuth) => {
+    isAuthenticated = isAuth;
+  },
+  getAuth: () => isAuthenticated
 };
 
 // /**

@@ -6,11 +6,11 @@ import auth from 'utils/auth';
 import genSalt from 'utils/salt';
 
 export function login(user) {
-    return { type: types.RECEIVE_USER, user };
+  return { type: types.RECEIVE_USER, user };
 }
 
 export function logout() {
-    return { type: types.LOGOUT };
+  return { type: types.LOGOUT };
 }
 
 /**
@@ -19,49 +19,49 @@ export function logout() {
 * @param  {string} password The password of the new user
 */
 export function register(username, password) {
-    return (dispatch) => {
-        // Show the loading indicator, hide the last error
-        dispatch(sendingRequest(true));
-        removeLastFormError();
-        // If no username or password was specified, throw a field-missing error
-        if (anyElementsEmpty({ username, password })) {
-            requestFailed({
-                type: 'field-missing'
-            });
-            dispatch(sendingRequest(false));
-            return;
-        }
-        // Generate salt for password encryption
-        const salt = genSalt(username);
-        // Encrypt password
-        bcrypt.hash(password, salt, (err, hash) => {
-            // Something wrong while hashing
-            if (err) {
-                requestFailed({
-                    type: 'failed'
-                });
-                return;
-            }
-            // Use auth.js to fake a request
-            auth.register(username, hash, (success, err) => {
-                // When the request is finished, hide the loading indicator
-                dispatch(sendingRequest(false));
-                dispatch(setAuthState(success));
-                if (success) {
-                    // If the register worked, forward the user to the homepage and clear the form
-                    forwardTo('/dashboard');
-                    dispatch(changeForm({
-                        username: '',
-                        password: ''
-                    }));
-                } else {
-                    requestFailed({
-                        type: 'unauthorized'
-                    });
-                }
-            });
+  return (dispatch) => {
+    // Show the loading indicator, hide the last error
+    dispatch(sendingRequest(true));
+    removeLastFormError();
+    // If no username or password was specified, throw a field-missing error
+    if (anyElementsEmpty({ username, password })) {
+      requestFailed({
+        type: 'field-missing'
+      });
+      dispatch(sendingRequest(false));
+      return;
+    }
+    // Generate salt for password encryption
+    const salt = genSalt(username);
+    // Encrypt password
+    bcrypt.hash(password, salt, (err, hash) => {
+      // Something wrong while hashing
+      if (err) {
+        requestFailed({
+          type: 'failed'
         });
-    };
+        return;
+      }
+      // Use auth.js to fake a request
+      auth.register(username, hash, (success, err) => {
+        // When the request is finished, hide the loading indicator
+        dispatch(sendingRequest(false));
+        dispatch(setAuthState(success));
+        if (success) {
+          // If the register worked, forward the user to the homepage and clear the form
+          forwardTo('/dashboard');
+          dispatch(changeForm({
+            username: '',
+            password: ''
+          }));
+        } else {
+          requestFailed({
+            type: 'unauthorized'
+          });
+        }
+      });
+    });
+  };
 }
 
 /**
@@ -69,7 +69,7 @@ export function register(username, password) {
 * @param {boolean} newState True means a user is logged in, false means no user is logged in
 */
 export function setAuthState(newState) {
-    return { type: SET_AUTH, newState };
+  return { type: SET_AUTH, newState };
 }
 
 /**
@@ -80,7 +80,7 @@ export function setAuthState(newState) {
 * @return {object}                   Formatted action for the reducer to handle
 */
 export function changeForm(newState) {
-    return { type: CHANGE_FORM, newState };
+  return { type: CHANGE_FORM, newState };
 }
 
 /**
@@ -89,7 +89,7 @@ export function changeForm(newState) {
 * @return {object}          Formatted action for the reducer to handle
 */
 export function sendingRequest(sending) {
-    return { type: SENDING_REQUEST, sending };
+  return { type: SENDING_REQUEST, sending };
 }
 
 /**
@@ -97,8 +97,8 @@ export function sendingRequest(sending) {
 * @param {string} location The route the user should be forwarded to
 */
 function forwardTo(location) {
-    console.log('forwardTo(' + location + ')');
-    // browserHistory.push(location);
+  console.log('forwardTo(' + location + ')');
+  // browserHistory.push(location);
 }
 
 /**
@@ -106,19 +106,19 @@ function forwardTo(location) {
 * @param  {object} err An object containing information about the error
 */
 function requestFailed(err) {
-    const formError = document.querySelector('.form-error');
-    // Remove the class of the last error so there can only ever be one
-    removeLastFormError();
+  const formError = document.querySelector('.form-error');
+  // Remove the class of the last error so there can only ever be one
+  removeLastFormError();
 
-    formError.innerText = 'The credentials you entered are incorrect.';
-    formError.classList.remove('hide');
+  formError.innerText = 'The credentials you entered are incorrect.';
+  formError.classList.remove('hide');
 }
 
 /**
 * Removes the last error from the form
 */
 function removeLastFormError() {
-    document.querySelector('.form-error').classList.add('hide');
+  document.querySelector('.form-error').classList.add('hide');
 }
 
 /**
@@ -127,10 +127,10 @@ function removeLastFormError() {
 * @return {boolean}         True if there are empty elements, false if there aren't
 */
 function anyElementsEmpty(elements) {
-    for (let element in elements) {
-        if (!elements[element]) {
-            return true;
-        }
+  for (let element in elements) {
+    if (!elements[element]) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }

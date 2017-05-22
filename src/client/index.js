@@ -10,19 +10,19 @@ import './stylesheets/core.scss';
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middleware = [
-    thunkMiddleware
+  thunkMiddleware
 ];
 const store = createStore(reducer, composeEnhancers(
   applyMiddleware(...middleware)
 ));
 
 store.subscribe(() => {
-    console.log('state', store.getState());
+  console.log('state', store.getState());
 });
 
 ReactDom.render(
-    <Provider store={store}>
-        <App></App>
-    </Provider>,
-    document.getElementById('app')
+  <Provider store={store}>
+    <App></App>
+  </Provider>,
+  document.getElementById('app')
 );

@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 /*eslint-enable no-unused-vars*/
 
 const Dashboard = () => (
-    <div>This is Dashboard.</div>
+  <div>This is Dashboard.</div>
 );
 
 const mapStateToProps = state => ({
-    state: state
+  state: state
 });
 
 export default connect(mapStateToProps)(Dashboard);
