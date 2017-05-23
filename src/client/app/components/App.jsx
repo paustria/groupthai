@@ -16,6 +16,7 @@ import Nav from './Nav';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import NotFound from './NotFound';
+import Jobs from 'app/jobs/components/Jobs';
 import {auth} from 'utils/auth';
 
 
@@ -45,6 +46,7 @@ const App = () => (
           <Route exact path="/" component={Home} />
           <Route exact path="/login" component={Login}/>
           <Route exact path="/register" component={Login}/>
+          <Route exact path="/jobs" component={Jobs} />
           <PrivateRoute path="/dashboard" component={Dashboard} />
           <Route component={NotFound}/>
         </Switch>

@@ -32,11 +32,12 @@ async function onClickLogout() {
 }
 
 const Nav = withRouter(({user, logout}) => {
+  const jobs = (<Link to="/jobs"><FlatButton label='Jobs' style={styles.textWhite}/></Link>);
   const registerBtn = (<Link to="/register"><FlatButton label='Create Account' style={styles.textWhite}/></Link>);
   const navButton = user ? (
-    <div><FlatButton label="Logout" onClick={onClickLogout.bind(logout)} style={styles.textWhite}/></div>
+    <div>{jobs}<FlatButton label="Logout" onClick={onClickLogout.bind(logout)} style={styles.textWhite}/></div>
   ) : (
-    <div><Link to="/login"><FlatButton label='Log in' style={styles.textWhite}/></Link>{registerBtn}</div>
+    <div>{jobs}<Link to="/login"><FlatButton label='Log in' style={styles.textWhite}/></Link>{registerBtn}</div>
   );
 
   return (
