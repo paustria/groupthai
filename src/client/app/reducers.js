@@ -10,18 +10,6 @@ const initialState = {
 
 const app = (state = initialState, action) => {
   switch (action.type) {
-    case types.CHANGE_FORM:
-      return {
-        ...state,
-        formState: action.newState
-      };
-
-    case types.SENDING_REQUEST:
-      return {
-        ...state,
-        currentlySending: action.sending
-      };
-
     case types.RECEIVE_USER:
       return {
         ...state,
