@@ -2,10 +2,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { compose, lifecycle, mapProps } from 'recompose';
 import {Card, CardTitle, CardText} from 'material-ui/Card';
-import Paper from 'material-ui/Paper';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 /*eslint-enable no-unused-vars*/
+
+const initialState = {
+  type: 'all',
+  status: 'active',
+  jobs: null
+};
 
 const styles = {
   jobType : {float:'right', margin:20}
@@ -17,49 +23,54 @@ async function fetchJobs() {
   return res.jobs;
 }
 
-const withJobs = lifecycle({
-  state: { jobs: null },
+class Jobs extends Component {
+  constructor(props) {
+    super(props);
+    this.state = initialState;
+  }
+
   async componentDidMount() {
     const jobs = await fetchJobs();
     this.setState({jobs: jobs});
   }
-});
 
-const JobList = ({ jobs, status }) => {
-  return <div>
-    {
-      jobs && jobs.map((job, i) =>
-        (<Card key={i}>
-          <div style={styles.jobType}>{job.type}</div>
-          <CardTitle title={job.title} subtitle={`${job.location.city}, ${job.location.state}`} />
-          <CardText>
-            {job.description}
-          </CardText>
-        </Card>)
-      )
-    }
-  </div>;
+  isMatchedFiltered(job) {
+    return (job.status === this.state.status) &&
+      (this.state.type === 'all' || job.type === this.state.type);
+  }
+
+  render() {
+    const jobs = this.state.jobs;
+
+    return (
+      <div>
+        <SelectField
+          floatingLabelText="Type"
+          value={this.state.type}
+          onChange={(event, index, type) => {this.setState({type})}}
+        >
+          <MenuItem value="all" primaryText="all" />
+          <MenuItem value="restaurant" primaryText="restaurant" />
+        </SelectField>
+       {
+         jobs && jobs.map((job, i) => {
+           return this.isMatchedFiltered(job) ? (<Card key={i}>
+             <div style={styles.jobType}>{job.type}</div>
+             <CardTitle title={job.title} subtitle={`${job.location.city}, ${job.location.state}`} />
+             <CardText>
+               {job.description}
+             </CardText>
+           </Card>) : '';
+           }
+         )
+       }
+     </div>
+    );
+  }
 }
 
-const filterByStatus = (status) => mapProps(
-  ({ jobs }) => ({
-    status,
-    jobs: jobs.filter(job => job.status === status)
-  })
-);
-
-const ActiveJobs = filterByStatus('active')(JobList);
-
-const Jobs = withJobs(({jobs}) => {
-  return (
-    <Paper zDepth={1}>
-      { jobs && <ActiveJobs jobs={jobs} /> }
-    </Paper>
-  );
-});
-
-const mapStateToProps = state => ({
-  state: state
+const mapStateToProps = (state) => ({
+  data: state
 });
 
 export default connect(mapStateToProps)(Jobs);
