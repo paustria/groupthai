@@ -6,6 +6,7 @@ import {Card, CardTitle, CardText} from 'material-ui/Card';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
+import Container from 'muicss/lib/react/container';
 /*eslint-enable no-unused-vars*/
 
 const initialState = {
@@ -53,7 +54,7 @@ class Jobs extends Component {
     const jobs = this.state.jobs;
 
     return (
-      <div>
+      <Container>
         <TextField
           hintText="title, description or location"
           onChange={(event, index) => this.setState({keyword:event.target.value})}
@@ -78,7 +79,7 @@ class Jobs extends Component {
            }
          )
        }
-     </div>
+     </Container>
     );
   }
 }

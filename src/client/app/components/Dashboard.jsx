@@ -2,10 +2,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Container from 'muicss/lib/react/container';
 /*eslint-enable no-unused-vars*/
 
 const Dashboard = () => (
-  <div>This is Dashboard.</div>
+  <Container>This is Dashboard.</Container>
 );
 
 const mapStateToProps = state => ({

@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { auth } from 'utils/auth';
 import app from 'app';
 
+import Container from 'muicss/lib/react/container';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
@@ -124,20 +125,16 @@ class Login extends Component {
     }
 
     return (
-      <div className="row">
-        <div className="col-sm-2 col-sm-offset-5">
-          <div className="text-center">
-            <h2>{viewText}</h2>
-            <form>
-              <TextField floatingLabelText="Email" errorText={this.state.emailError} hintText="Please enter your email" value={this.state.email} onChange={(e) => this.setState({'email': e.target.value, 'emailError': ''})} />
-              <TextField floatingLabelText="Password" errorText={this.state.passwordError} hintText="Please enter your password" type="password" value={this.state.password} onChange={(e)=> this.setState({'password': e.target.value, 'passwordError': ''})} />
-              {isRegisterView && <TextField floatingLabelText="Confirm Password" errorText={this.state.confirmPasswordError} hintText="Please confirm your password" type="password" value={this.state.confirmPassword} onChange={(e)=> this.setState({'confirmPassword': e.target.value, 'confirmPasswordError': ''})} />}
-              <RaisedButton label={viewText} primary={true} onClick={this.handleSubmit.bind(this)}/>
-            </form>
-            <a href="/auth/facebook">Test facebook login</a>
-          </div>
-        </div>
-      </div>
+      <Container>
+        <h2>{viewText}</h2>
+        <form>
+          <TextField floatingLabelText="Email" errorText={this.state.emailError} hintText="Please enter your email" value={this.state.email} onChange={(e) => this.setState({'email': e.target.value, 'emailError': ''})} />
+          <TextField floatingLabelText="Password" errorText={this.state.passwordError} hintText="Please enter your password" type="password" value={this.state.password} onChange={(e)=> this.setState({'password': e.target.value, 'passwordError': ''})} />
+          {isRegisterView && <TextField floatingLabelText="Confirm Password" errorText={this.state.confirmPasswordError} hintText="Please confirm your password" type="password" value={this.state.confirmPassword} onChange={(e)=> this.setState({'confirmPassword': e.target.value, 'confirmPasswordError': ''})} />}
+          <RaisedButton label={viewText} primary={true} onClick={this.handleSubmit.bind(this)}/>
+        </form>
+        <a href="/auth/facebook">Test facebook login</a>
+      </Container>
     );
   }
 }
