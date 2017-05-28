@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import {Card, CardTitle, CardText} from 'material-ui/Card';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import TextField from 'material-ui/TextField';
 /*eslint-enable no-unused-vars*/
 
 const initialState = {
   type: 'all',
   status: 'active',
-  jobs: null
+  jobs: null,
+  keyword: ''
 };
 
 const styles = {
@@ -35,8 +37,16 @@ class Jobs extends Component {
   }
 
   isMatchedFiltered(job) {
+    const keyword = this.state.keyword.toLowerCase();
+
     return (job.status === this.state.status) &&
-      (this.state.type === 'all' || job.type === this.state.type);
+      (this.state.type === 'all' || job.type === this.state.type) &&
+      (
+        job.title.toLowerCase().indexOf(keyword) >= 0 ||
+        job.description.toLowerCase().indexOf(keyword) >= 0 ||
+        job.location.city.toLowerCase().indexOf(keyword) >= 0 ||
+        job.location.state.toLowerCase().indexOf(keyword) >= 0
+      );
   }
 
   render() {
@@ -44,10 +54,14 @@ class Jobs extends Component {
 
     return (
       <div>
+        <TextField
+          hintText="title, description or location"
+          onChange={(event, index) => this.setState({keyword:event.target.value})}
+        />
         <SelectField
           floatingLabelText="Type"
           value={this.state.type}
-          onChange={(event, index, type) => {this.setState({type})}}
+          onChange={(event, index, type) => this.setState({type})}
         >
           <MenuItem value="all" primaryText="all" />
           <MenuItem value="restaurant" primaryText="restaurant" />
