@@ -11,6 +11,9 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import { connect } from 'react-redux';
 injectTapEventPlugin();
 
+import 'muicss/dist/css/mui.min.css';
+import Container from 'muicss/lib/react/container';
+
 import Home from './Home';
 import Nav from './Nav';
 import Login from './Login';
@@ -44,10 +47,12 @@ const App = () => (
         <Nav />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/login" component={Login}/>
-          <Route exact path="/register" component={Login}/>
-          <Route exact path="/jobs" component={Jobs} />
-          <PrivateRoute path="/dashboard" component={Dashboard} />
+          <Container>
+            <Route exact path="/login" component={Login}/>
+            <Route exact path="/register" component={Login}/>
+            <Route exact path="/jobs" component={Jobs} />
+            <PrivateRoute path="/dashboard" component={Dashboard} />
+          </Container>
           <Route component={NotFound}/>
         </Switch>
       </div>

@@ -31,6 +31,7 @@
     "material-ui": "^0.18.1",
     "mongoose": "^4.7.6",
     "morgan": "^1.8.1",
+    "muicss": "^0.9.16",
     "node-sass": "^3.10.0",
     "parallelshell": "^2.0.0",
     "passport": "^0.3.2",
