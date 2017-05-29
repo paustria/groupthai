@@ -1,4 +1,5 @@
 /*eslint-disable no-unused-vars*/
+import _ from 'lodash';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -15,18 +16,23 @@ const initialState = {
   type: 'all',
   status: 'active',
   jobs: null,
+  jobTypes: [],
   keyword: ''
 };
 
 const styles = {
-  jobType : {float:'right', margin:20}
+  jobType : {float:'right', margin:20, textTransform:'capitalize'},
+  jobTypes : {textTransform:'capitalize'}
 };
 
 async function fetchJobs() {
   const response = await fetch('/api/jobs', {});
   const res = await response.json();
+
   return res.jobs;
 }
+
+const getJobTypes = (jobs) => _.keys(_.groupBy(jobs, 'type'));
 
 class Jobs extends Component {
   constructor(props) {
@@ -36,7 +42,7 @@ class Jobs extends Component {
 
   async componentDidMount() {
     const jobs = await fetchJobs();
-    this.setState({jobs: jobs});
+    this.setState({jobs: jobs, jobTypes: ['all'].concat(getJobTypes(jobs))});
   }
 
   isMatchedFiltered(job) {
@@ -54,6 +60,7 @@ class Jobs extends Component {
 
   render() {
     const jobs = this.state.jobs;
+    const jobTypes = this.state.jobTypes;
 
     return (
       <Container>
@@ -63,31 +70,36 @@ class Jobs extends Component {
               floatingLabelText="Keyword"
               floatingLabelFixed={true}
               hintText="title, description or location"
-              onChange={(event, index) => this.setState({keyword:event.target.value})}
+              onChange={(event, index) =>
+                this.setState({keyword:event.target.value})}
             />
           </Col>
           <Col md="5">
             <SelectField
+              style={styles.jobTypes}
               floatingLabelText="Type"
               value={this.state.type}
               onChange={(event, index, type) => this.setState({type})}
             >
-              <MenuItem value="all" primaryText="all" />
-              <MenuItem value="restaurant" primaryText="restaurant" />
+              {
+                jobTypes && jobTypes.map((type, i) =>
+                  <MenuItem style={styles.jobTypes} key={i}
+                    value={type} primaryText={type} />
+                )
+              }
             </SelectField>
           </Col>
         </Row>
        {
-         jobs && jobs.map((job, i) => {
-           return this.isMatchedFiltered(job) ? (<Card key={i}>
+         jobs && jobs.map((job, i) =>
+           this.isMatchedFiltered(job) ? (<Card key={i}>
              <div style={styles.jobType}>{job.type}</div>
-             <CardTitle title={job.title} subtitle={`${job.location.city}, ${job.location.state}`} />
+             <CardTitle title={job.title}
+               subtitle={`${job.location.city}, ${job.location.state}`} />
              <CardText>
                {job.description}
              </CardText>
-           </Card>) : '';
-           }
-         )
+           </Card>) : '')
        }
      </Container>
     );

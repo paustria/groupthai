@@ -88,6 +88,27 @@ app.get('/api/jobs', (req, res) => {
       start_date: 1495514492,
       expired_date: 1498192891,
       created_by: 12312 //User ID
+    },
+    {
+      title: 'Job Title 4',
+      location: {
+        city: 'Beverly Hills',
+        state: 'CA',
+        zip: '92134'
+      },
+      contact: {
+        phone: null, //Must have at least phone or email.
+        email: null,
+        website: null,
+        name: 'Bob'
+      },
+      status: 'active',
+      type: 'massage', //ENUM
+      description: 'description 4',
+      created_date: 1495514492,
+      start_date: 1495514492,
+      expired_date: 1498192891,
+      created_by: 12312 //User ID
     }
   ];
 
