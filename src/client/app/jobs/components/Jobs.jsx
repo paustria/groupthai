@@ -7,6 +7,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import Container from 'muicss/lib/react/container';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
 /*eslint-enable no-unused-vars*/
 
 const initialState = {
@@ -55,18 +57,26 @@ class Jobs extends Component {
 
     return (
       <Container>
-        <TextField
-          hintText="title, description or location"
-          onChange={(event, index) => this.setState({keyword:event.target.value})}
-        />
-        <SelectField
-          floatingLabelText="Type"
-          value={this.state.type}
-          onChange={(event, index, type) => this.setState({type})}
-        >
-          <MenuItem value="all" primaryText="all" />
-          <MenuItem value="restaurant" primaryText="restaurant" />
-        </SelectField>
+        <Row>
+          <Col md="5">
+            <TextField
+              floatingLabelText="Keyword"
+              floatingLabelFixed={true}
+              hintText="title, description or location"
+              onChange={(event, index) => this.setState({keyword:event.target.value})}
+            />
+          </Col>
+          <Col md="5">
+            <SelectField
+              floatingLabelText="Type"
+              value={this.state.type}
+              onChange={(event, index, type) => this.setState({type})}
+            >
+              <MenuItem value="all" primaryText="all" />
+              <MenuItem value="restaurant" primaryText="restaurant" />
+            </SelectField>
+          </Col>
+        </Row>
        {
          jobs && jobs.map((job, i) => {
            return this.isMatchedFiltered(job) ? (<Card key={i}>
