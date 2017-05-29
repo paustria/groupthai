@@ -5,8 +5,12 @@ import { auth } from 'utils/auth';
 import app from 'app';
 
 import Container from 'muicss/lib/react/container';
+import Row from 'muicss/lib/react/row';
+import Col from 'muicss/lib/react/col';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import Paper from 'material-ui/Paper';
+import Divider from 'material-ui/Divider';
 
 const initialState = {
   email: '',
@@ -15,6 +19,12 @@ const initialState = {
   emailError: '',
   passwordError: '',
   confirmPasswordError: ''
+};
+
+const style = {
+  form: {marginLeft: 20},
+  formTitle: {paddingTop: 20, marginBottom: 0},
+  formBtn: {margin: 20}
 };
 
 class Login extends Component {
@@ -126,14 +136,58 @@ class Login extends Component {
 
     return (
       <Container>
-        <h2>{viewText}</h2>
-        <form>
-          <TextField floatingLabelText="Email" errorText={this.state.emailError} hintText="Please enter your email" value={this.state.email} onChange={(e) => this.setState({'email': e.target.value, 'emailError': ''})} />
-          <TextField floatingLabelText="Password" errorText={this.state.passwordError} hintText="Please enter your password" type="password" value={this.state.password} onChange={(e)=> this.setState({'password': e.target.value, 'passwordError': ''})} />
-          {isRegisterView && <TextField floatingLabelText="Confirm Password" errorText={this.state.confirmPasswordError} hintText="Please confirm your password" type="password" value={this.state.confirmPassword} onChange={(e)=> this.setState({'confirmPassword': e.target.value, 'confirmPasswordError': ''})} />}
-          <RaisedButton label={viewText} primary={true} onClick={this.handleSubmit.bind(this)}/>
-        </form>
-        <a href="/auth/facebook">Test facebook login</a>
+        <Row>
+          <Col md="6" md-offset="3">
+            <Paper zDepth={1}>
+              <h1 style={style.formTitle} className="mui--text-center">
+                {viewText}
+              </h1>
+              <form>
+                <TextField
+                  style={style.form}
+                  floatingLabelText="Email"
+                  underlineShow={false}
+                  errorText={this.state.emailError}
+                  hintText="Please enter your email"
+                  value={this.state.email}
+                  onChange={(e) => this.setState({'email': e.target.value, 'emailError': ''})}
+                />
+                <Divider />
+                <TextField
+                  style={style.form}
+                  floatingLabelText="Password"
+                  underlineShow={false}
+                  errorText={this.state.passwordError}
+                  hintText="Please enter your password"
+                  type="password"
+                  value={this.state.password}
+                  onChange={(e)=> this.setState({'password': e.target.value, 'passwordError': ''})}
+                />
+                {isRegisterView &&
+                  <span>
+                    <Divider />
+                    <TextField
+                      style={style.form}
+                      floatingLabelText="Confirm Password"
+                      underlineShow={false}
+                      errorText={this.state.confirmPasswordError}
+                      hintText="Please confirm your password"
+                      type="password" value={this.state.confirmPassword}
+                      onChange={(e)=> this.setState({'confirmPassword': e.target.value, 'confirmPasswordError': ''})}
+                    />
+                  </span>
+                }
+                <Divider />
+                <div style={style.formBtn} className="mui--text-center">
+                  <RaisedButton label={viewText} primary={true} onClick={this.handleSubmit.bind(this)}/>
+                </div>
+              </form>
+              <div style={style.formBtn} className="mui--text-center">
+                <a href="/auth/facebook">Test facebook login</a>
+              </div>
+            </Paper>
+          </Col>
+        </Row>
       </Container>
     );
   }
