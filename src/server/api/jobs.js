@@ -1,4 +1,4 @@
-import {app} from '../';
+import {app} from '../app';
 import JobPosting from '../models/jobposting';
 
 app.post('/api/job', (req, res) => {
