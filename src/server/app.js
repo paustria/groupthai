@@ -111,7 +111,8 @@ app.get('/auth/callback/facebook',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   // on success
   function(req, res) {
-    return res.status(200);
+    req.session.user = req.user;
+    res.redirect('/?facebook=true');
   },
   // on error; likely to be something FacebookTokenError token invalid or already used token,
   // these errors occur when the user logs in twice with the same token
@@ -181,10 +182,20 @@ app.post('/register', function (req, res) {
 app.post('/login', passport.authenticate('local'),
   (req, res) => {
     if (req.user) {
+      req.session.user = req.user.local;
       return res.status(200).json({user: req.user.local});
     }
 
     return res.status(401).json({error: 'Failed login.'});
+  });
+
+app.get('/user',
+  (req, res) => {
+    if (req.session.user) {
+      return res.status(200).json({user: req.session.user});
+    }
+
+    return res.status(401).json({error: 'Please log in.'});
   });
 
 app.get('/logout', (req, res) => {

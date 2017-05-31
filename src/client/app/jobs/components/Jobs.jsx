@@ -26,7 +26,7 @@ const styles = {
 };
 
 async function fetchJobs() {
-  const response = await fetch('/api/jobs', {});
+  const response = await fetch('/api/jobs', {credentials: 'same-origin'});
   const res = await response.json();
 
   return res.jobs;
