@@ -45,17 +45,31 @@ class Jobs extends Component {
     this.setState({jobs: jobs, jobTypes: ['all'].concat(getJobTypes(jobs))});
   }
 
-  isMatchedFiltered(job) {
-    const keyword = this.state.keyword.toLowerCase();
+  // this is something similar to job.location.city.toLowerCase().indexOf(keyword) >= 0
+  isIncluded(col, attribute, query) {
+    const c = attribute.split('.');
+    const next = attribute.split('.').slice(1, c.length).join('.');
 
-    return (job.status === this.state.status) &&
-      (this.state.type === 'all' || job.type === this.state.type) &&
-      (
-        job.title.toLowerCase().indexOf(keyword) >= 0 ||
-        job.description.toLowerCase().indexOf(keyword) >= 0 ||
-        job.location.city.toLowerCase().indexOf(keyword) >= 0 ||
-        job.location.state.toLowerCase().indexOf(keyword) >= 0
-      );
+    if (c.length == 1) {
+      return col[c[0]].toLowerCase().includes(query);
+    }
+
+    return this.isIncluded(col[c[0]], next, query);
+  }
+
+  isMatchedFiltered(job) {
+    const { keyword, status, type } = this.state;
+    const query = keyword.toLowerCase();
+    const columns = [
+      'title',
+      'description',
+      'location.city',
+      'location.state'
+    ];
+
+    return (job.status === status) &&
+      (this.state.type === 'all' || job.type === type) &&
+      columns.some((col) => this.isIncluded(job, col, query))
   }
 
   render() {
