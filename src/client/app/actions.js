@@ -6,7 +6,14 @@ import auth from 'utils/auth';
 import genSalt from 'utils/salt';
 
 export function login(user) {
-  return { type: types.RECEIVE_USER, user };
+  const obj = {
+    username: user.username || user.name,
+    email: user.email ||
+          (user.facebook ? user.facebook.email: null) ||
+          user.username
+  };
+
+  return { type: types.RECEIVE_USER, user: obj };
 }
 
 export function logout() {
