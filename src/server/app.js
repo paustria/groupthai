@@ -67,7 +67,7 @@ const facebookStrategy = new FacebookStrategy({
   clientID: FACEBOOK_APP_ID,
   clientSecret: FACEBOOK_APP_SECRET,
   callbackURL: '/auth/callback/facebook',
-  profileFields: ['id', 'displayName', 'first_name', 'last_name', 'emails'],
+  profileFields: ['id', 'displayName', 'first_name', 'last_name', 'emails', 'photos'],
   enableProof: true
 },
 function(accessToken, refreshToken, profile, done) {

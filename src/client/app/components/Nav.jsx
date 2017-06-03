@@ -7,6 +7,10 @@ import app from 'app';
 
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 const styles = {
   textWhite: {
@@ -34,15 +38,28 @@ async function onClickLogout() {
 const Nav = withRouter(({user, logout}) => {
   const jobs = (<Link to="/jobs"><FlatButton label='Jobs' style={styles.textWhite}/></Link>);
   const registerBtn = (<Link to="/register"><FlatButton label='Create Account' style={styles.textWhite}/></Link>);
+  const loggedInBtn =(
+    <IconMenu
+      iconButtonElement={
+        <IconButton><MoreVertIcon/></IconButton>
+      }
+      targetOrigin={{horizontal: 'right', vertical: 'top'}}
+      anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+      iconStyle={styles.textWhite}
+    >
+      <MenuItem primaryText={<Link to="/dashboard">Dashboard</Link>} />
+      <MenuItem onClick={onClickLogout.bind(logout)} primaryText="Sign out" />
+    </IconMenu>
+  );
   const navButton = user ? (
-    <div>{jobs}<FlatButton label="Logout" onClick={onClickLogout.bind(logout)} style={styles.textWhite}/></div>
+    <div>{jobs}{loggedInBtn}</div>
   ) : (
     <div>{jobs}<Link to="/login"><FlatButton label='Log in' style={styles.textWhite}/></Link>{registerBtn}</div>
   );
 
   return (
     <AppBar
-      title={<Link to="/" style={styles.textWhite}>GroupThai กลุ่มคนไทย</Link>}
+      title={<Link to="/" style={styles.textWhite}>GroupThai</Link>}
       iconElementRight={navButton}
       iconStyleRight={styles.navRight}
       showMenuIconButton={false}
