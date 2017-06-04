@@ -3,9 +3,7 @@ import * as types from './constants';
 import auth from 'utils/auth';
 
 const initialState = {
-  user: null,
-  currentlySending: false,
-  test: false
+  user: null
 };
 
 const app = (state = initialState, action) => {

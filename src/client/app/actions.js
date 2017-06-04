@@ -7,7 +7,8 @@ import genSalt from 'utils/salt';
 
 export function login(user) {
   const obj = {
-    username: user.username || user.name,
+    displayName: user.username || user.name,
+    isFacebook: !!user.facebook,
     email: user.email ||
           (user.facebook ? user.facebook.email: null) ||
           user.username
