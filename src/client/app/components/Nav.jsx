@@ -10,12 +10,16 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
 const styles = {
   textWhite: {
     color: 'white',
     textDecoration: 'none'
+  },
+  rightMenuContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: '0'
   }
 };
 
@@ -41,7 +45,7 @@ const Nav = withRouter(({user, logout}) => {
   const loggedInBtn =(
     <IconMenu
       iconButtonElement={
-        <IconButton><MoreVertIcon/></IconButton>
+        <IconButton><i className="material-icons">account_circle</i></IconButton>
       }
       targetOrigin={{horizontal: 'right', vertical: 'top'}}
       anchorOrigin={{horizontal: 'right', vertical: 'top'}}
@@ -52,16 +56,22 @@ const Nav = withRouter(({user, logout}) => {
     </IconMenu>
   );
   const navButton = user ? (
-    <div>{jobs}{loggedInBtn}</div>
+    <div style={styles.rightMenuContainer}>{jobs}{loggedInBtn}</div>
   ) : (
-    <div>{jobs}<Link to="/login"><FlatButton label='Log in' style={styles.textWhite}/></Link>{registerBtn}</div>
+    <div style={styles.rightMenuContainer}>
+      {jobs}
+      <Link to="/login">
+        <FlatButton label='Log in' style={styles.textWhite}/>
+      </Link>
+      {registerBtn}
+    </div>
   );
 
   return (
     <AppBar
       title={<Link to="/" style={styles.textWhite}>GroupThai</Link>}
       iconElementRight={navButton}
-      iconStyleRight={styles.navRight}
+      iconStyleRight={styles.rightMenuContainer}
       showMenuIconButton={false}
     />
   );
