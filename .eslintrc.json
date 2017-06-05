@@ -5,17 +5,24 @@
     "commonjs": true,
     "es6": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["airbnb"],
   "parserOptions": {
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true,
-      "jsx": true
+      "jsx": true,
+      "modules": true
     },
     "sourceType": "module"
   },
   "plugins": [
     "react"
   ],
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "15.0"
+    }
+  },
   "rules": {
     "indent": [
       "error",
@@ -32,6 +39,18 @@
     "semi": [
       "error",
       "always"
-    ]
+    ],
+    "import/no-unresolved": [2, {
+      "ignore": ["^(~|app|utils)"]
+    }],
+    "import/extensions": [0],
+    "import/no-extraneous-dependencies": [0],
+    "react/jsx-filename-extension": [0],
+    "react/prop-types": [1, {
+      "ignore": [
+        "classes",
+        "match"
+      ]
+    }]
   }
 }
