@@ -1,5 +1,6 @@
 import 'muicss/dist/css/mui.min.css';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Redirect,
   BrowserRouter,
@@ -40,6 +41,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
       )}
     />
   );
+};
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func,
+  location: PropTypes.object,
 };
 
 const App = () => (

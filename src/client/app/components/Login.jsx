@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { auth } from 'utils/auth';
@@ -18,13 +19,13 @@ const initialState = {
   confirmPassword: '',
   emailError: '',
   passwordError: '',
-  confirmPasswordError: ''
+  confirmPasswordError: '',
 };
 
 const style = {
-  form: {marginLeft: 20},
-  formTitle: {paddingTop: 20, marginBottom: 0},
-  formBtn: {margin: 20}
+  form: { marginLeft: 20 },
+  formTitle: { paddingTop: 20, marginBottom: 0 },
+  formBtn: { margin: 20 },
 };
 
 class Login extends Component {
@@ -53,7 +54,7 @@ class Login extends Component {
     const isRegisterView = this.props.location.pathname === '/register';
     const url = isRegisterView ? '/register' : '/login';
 
-    if(this.validateForm()) {
+    if (this.validateForm()) {
       const options = {
         method: 'POST',
         body: JSON.stringify({
@@ -61,25 +62,27 @@ class Login extends Component {
           password: this.state.password,
         }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        credentials: 'same-origin'
+        credentials: 'same-origin',
       };
 
       try {
         const response = await fetch(url, options);
-        if(!response.ok) {
-          if (response.statusText === 'Unauthorized')
+        if (!response.ok) {
+          if (response.statusText === 'Unauthorized') {
             throw Error('Username and/or password combination is incorrect.');
-          if (response.statusText === 'Forbidden')
+          }
+          if (response.statusText === 'Forbidden') {
             throw Error('Email is already existed.');
-          throw Error(response.statusText)
+          }
+          throw Error(response.statusText);
         }
         const body = await response.json();
         auth.setAuth(true);
         this.props.login(body.user);
       } catch (err) {
-        this.setState({ emailError: err.message })
+        this.setState({ emailError: err.message });
       }
     }
   }
@@ -88,7 +91,7 @@ class Login extends Component {
     this.setState({
       emailError: '',
       passwordError: '',
-      confirmPasswordError: ''
+      confirmPasswordError: '',
     });
   }
 
@@ -101,11 +104,11 @@ class Login extends Component {
 
     if (!this.state.email) {
       hasError = true;
-      this.setState({emailError: 'Please fill out email'});
+      this.setState({ emailError: 'Please fill out email' });
     }
     if (!this.state.password) {
       hasError = true;
-      this.setState({passwordError: 'Please fill out password'});
+      this.setState({ passwordError: 'Please fill out password' });
     }
     if (isRegisterView && !this.state.confirmPassword) {
       hasError = true;
@@ -126,7 +129,7 @@ class Login extends Component {
 
   render() {
     const isRegisterView = this.props.location.pathname === '/register';
-    const viewText = isRegisterView ? 'Register': 'Login';
+    const viewText = isRegisterView ? 'Register' : 'Login';
 
     if (this.props.data.app.user) {
       return (
@@ -179,7 +182,7 @@ class Login extends Component {
                 }
                 <Divider />
                 <div style={style.formBtn} className="mui--text-center">
-                  <RaisedButton label={viewText} primary={true} onClick={this.handleSubmit.bind(this)}/>
+                  <RaisedButton label={viewText} primary onClick={this.handleSubmit.bind(this)} />
                 </div>
               </form>
               <div style={style.formBtn} className="mui--text-center">
@@ -193,12 +196,18 @@ class Login extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  data: state
+Login.propTypes = {
+  data: PropTypes.object,
+  location: PropTypes.object,
+  login: PropTypes.func,
+};
+
+const mapStateToProps = state => ({
+  data: state,
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: (user) => dispatch(app.actions.login(user))
+  login: user => dispatch(app.actions.login(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

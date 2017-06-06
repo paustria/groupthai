@@ -1,17 +1,14 @@
-/*eslint-disable no-unused-vars*/
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import Container from 'muicss/lib/react/container';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
-/*eslint-enable no-unused-vars*/
 
 const styles = {
   headline: {
@@ -20,19 +17,19 @@ const styles = {
     marginBottom: 12,
     fontWeight: 400,
   },
-  form: {marginLeft: 20},
+  form: { marginLeft: 20 },
   formTitle: {
     paddingTop: 20,
-    marginBottom: 0
+    marginBottom: 0,
   },
-  formBtn: {margin: 20}
+  formBtn: { margin: 20 },
 };
 
 const initialState = {
   displayName: '',
   displayNameError: '',
   email: '',
-  emailError: ''
+  emailError: '',
 };
 
 class Dashboard extends Component {
@@ -44,7 +41,7 @@ class Dashboard extends Component {
   render() {
     const { user } = this.props;
 
-    const profileTab = user?(
+    const profileTab = user ? (
       <Row>
         <Col md="6" md-offset="3">
           <Paper zDepth={1}>
@@ -56,7 +53,14 @@ class Dashboard extends Component {
                 errorText={this.state.displayNameError}
                 hintText="Please enter your display name"
                 value={user.displayName}
-                onChange={(e) => this.setState({'displayName': e.target.value, 'displayNameError': ''})}
+                onChange={
+                  e => this.setState(
+                    {
+                      displayName: e.target.value,
+                      displayNameError: '',
+                    },
+                  )
+                }
               />
               <Divider />
               <TextField
@@ -66,19 +70,26 @@ class Dashboard extends Component {
                 errorText={this.state.emailError}
                 hintText="Please enter your email"
                 value={user.email}
-                onChange={(e)=> this.setState({'email': e.target.value, 'emailError': ''})}
+                onChange={
+                  e => this.setState(
+                    {
+                      email: e.target.value,
+                      emailError: '',
+                    },
+                  )
+                }
               />
               <Divider />
               <div style={styles.formBtn} className="mui--text-center">
-                <RaisedButton label="Update" primary={true} />
+                <RaisedButton label="Update" primary />
               </div>
             </form>
           </Paper>
         </Col>
       </Row>
-    ):<div/>;
+    ) : <div />;
 
-    return user?(<Container>
+    return user ? (<Container>
       <h1>Dashboard</h1>
       <Tabs>
         { !user.isFacebook && <Tab label="Profile" >{profileTab}</Tab>}
@@ -91,12 +102,16 @@ class Dashboard extends Component {
           </div>
         </Tab>
       </Tabs>
-    </Container>):<div/>;
+    </Container>) : <div />;
   }
 }
 
+Dashboard.propTypes = {
+  user: PropTypes.object,
+};
+
 const mapStateToProps = state => ({
-  user: state.app.user
+  user: state.app.user,
 });
 
 export default connect(mapStateToProps)(Dashboard);
