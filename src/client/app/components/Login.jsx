@@ -33,6 +33,7 @@ class Login extends Component {
     super(props);
     this.state = initialState;
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -97,7 +98,7 @@ class Login extends Component {
 
   validateForm() {
     const isRegisterView = this.props.location.pathname === '/register';
-    const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regexEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let hasError = false;
 
     this.resetError();
@@ -112,14 +113,14 @@ class Login extends Component {
     }
     if (isRegisterView && !this.state.confirmPassword) {
       hasError = true;
-      this.setState({confirmPasswordError: 'Please fill out confirmPassword'});
-    } else if (isRegisterView && (this.state.password != this.state.confirmPassword)) {
+      this.setState({ confirmPasswordError: 'Please fill out confirmPassword' });
+    } else if (isRegisterView && (this.state.password !== this.state.confirmPassword)) {
       hasError = true;
-      this.setState({confirmPasswordError: 'Password does not match'});
+      this.setState({ confirmPasswordError: 'Password does not match' });
     }
     if (this.state.email && !regexEmail.test(this.state.email)) {
       hasError = true;
-      this.setState({emailError: 'Please fill out correct email format.'});
+      this.setState({ emailError: 'Please fill out correct email format.' });
     }
 
     if (hasError) return false;
@@ -133,7 +134,7 @@ class Login extends Component {
 
     if (this.props.data.app.user) {
       return (
-        <Redirect to="/dashboard"/>
+        <Redirect to="/dashboard" />
       );
     }
 
@@ -153,7 +154,10 @@ class Login extends Component {
                   errorText={this.state.emailError}
                   hintText="Please enter your email"
                   value={this.state.email}
-                  onChange={(e) => this.setState({'email': e.target.value, 'emailError': ''})}
+                  onChange={e => this.setState({
+                    email: e.target.value,
+                    emailError: '',
+                  })}
                 />
                 <Divider />
                 <TextField
@@ -164,7 +168,10 @@ class Login extends Component {
                   hintText="Please enter your password"
                   type="password"
                   value={this.state.password}
-                  onChange={(e)=> this.setState({'password': e.target.value, 'passwordError': ''})}
+                  onChange={e => this.setState({
+                    password: e.target.value,
+                    passwordError: '',
+                  })}
                 />
                 {isRegisterView &&
                   <span>
@@ -176,13 +183,16 @@ class Login extends Component {
                       errorText={this.state.confirmPasswordError}
                       hintText="Please confirm your password"
                       type="password" value={this.state.confirmPassword}
-                      onChange={(e)=> this.setState({'confirmPassword': e.target.value, 'confirmPasswordError': ''})}
+                      onChange={e => this.setState({
+                        confirmPassword: e.target.value,
+                        confirmPasswordError: '',
+                      })}
                     />
                   </span>
                 }
                 <Divider />
                 <div style={style.formBtn} className="mui--text-center">
-                  <RaisedButton label={viewText} primary onClick={this.handleSubmit.bind(this)} />
+                  <RaisedButton label={viewText} primary onClick={this.handleSubmit} />
                 </div>
               </form>
               <div style={style.formBtn} className="mui--text-center">

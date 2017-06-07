@@ -1,7 +1,5 @@
-/*eslint-disable no-unused-vars*/
-import React, { Component } from 'react';
+import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-/*eslint-enable no-unused-vars*/
 import { connect } from 'react-redux';
 import app from 'app';
 
@@ -14,54 +12,54 @@ import MenuItem from 'material-ui/MenuItem';
 const styles = {
   textWhite: {
     color: 'white',
-    textDecoration: 'none'
+    textDecoration: 'none',
   },
   rightMenuContainer: {
     display: 'flex',
     alignItems: 'center',
-    marginTop: '0'
-  }
+    marginTop: '0',
+  },
 };
 
-async function onClickLogout() {
-  try {
-    const logout = this;
-    const response = await fetch('/logout', {});
+const Nav = withRouter(({ user, logout }) => {
+  const onClickLogout = async function onClickLogout() {
+    try {
+      const response = await fetch('/logout', {});
 
-    if(!response.ok) {
-      throw Error('Not Authorized');
+      if (!response.ok) {
+        throw Error('Not Authorized');
+      }
+      logout();
+      window.location.href = '/';
+    } catch (err) {
+      // TODO: Add error message.
+      // this.setState({ error: err.message })
     }
-    logout();
-    window.location.href = '/';
-  } catch (err) {
-    // TODO: Add error message.
-    // this.setState({ error: err.message })
-  }
-}
-
-const Nav = withRouter(({user, logout}) => {
-  const jobs = (<Link to="/jobs"><FlatButton label='Jobs' style={styles.textWhite}/></Link>);
-  const registerBtn = (<Link to="/register"><FlatButton label='Create Account' style={styles.textWhite}/></Link>);
-  const loggedInBtn =(
+  };
+  const jobs = (<Link to="/jobs"><FlatButton label="Jobs" style={styles.textWhite} /></Link>);
+  const registerBtn = (
+    <Link to="/register"><FlatButton label="Create Account" style={styles.textWhite} /></Link>);
+  const loggedInBtn = (
     <IconMenu
       iconButtonElement={
         <IconButton><i className="material-icons">account_circle</i></IconButton>
       }
-      targetOrigin={{horizontal: 'right', vertical: 'top'}}
-      anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+      targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
       iconStyle={styles.textWhite}
     >
       <MenuItem primaryText={<Link to="/dashboard">Dashboard</Link>} />
-      <MenuItem onClick={onClickLogout.bind(logout)} primaryText="Sign out" />
+      <MenuItem onClick={onClickLogout} primaryText="Sign out" />
     </IconMenu>
   );
+
   const navButton = user ? (
     <div style={styles.rightMenuContainer}>{jobs}{loggedInBtn}</div>
   ) : (
     <div style={styles.rightMenuContainer}>
       {jobs}
       <Link to="/login">
-        <FlatButton label='Log in' style={styles.textWhite}/>
+        <FlatButton label="Log in" style={styles.textWhite} />
       </Link>
       {registerBtn}
     </div>
@@ -79,11 +77,11 @@ const Nav = withRouter(({user, logout}) => {
 
 const mapStateToProps = state => ({
   user: state.app.user,
-  loggedIn: state.app.loggedIn
+  loggedIn: state.app.loggedIn,
 });
 
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(app.actions.logout())
+  logout: () => dispatch(app.actions.logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Nav);
