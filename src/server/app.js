@@ -1,22 +1,25 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
-import session from 'express-session'
-import genSalt from '../client/utils/salt';
+import session from 'express-session';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
 import morgan from 'morgan';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
+import genSalt from '../client/utils/salt';
 import { dirname } from '../../config';
-require('dotenv').config();
 import User from './models/user';
 
-export const app = express();
+require('dotenv').config();
+
+const app = express();
+
+export default app;
 
 app.set('port', process.env.PORT || 3000)
 .use(morgan('combined'))
-.use(express.static(dirname + '/public'))
+.use(express.static(`${dirname}/public`))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true }));
 
@@ -24,35 +27,35 @@ app.set('port', process.env.PORT || 3000)
 * Mongoose
 */
 const MONGODB = {
-  uri: process.env.MONGODB_URI ||
-  'mongodb://localhost:27017/groupthai'
+  uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/groupthai',
 };
 mongoose.connect(MONGODB.uri);
 
 /**
 * Local auth
 */
-const localStrategy = new LocalStrategy(function(username, password, done) {
-  User.findOne({ 'local.username' : username }, function (err, user) {
+const localStrategy = new LocalStrategy((username, password, done) => {
+  User.findOne({ 'local.username': username }, (err, user) => {
     if (err) return done(err);
 
     if (!user) {
       console.log('user not found. user=', username);
-      return done(null, false, {message: 'User not found.'});
+      return done(null, false, { message: 'User not found.' });
     }
 
     const salt = genSalt(username.toLowerCase());
-    bcrypt.hash(password, salt, (err, hash) => {
-      if (err)
-      return res.status(500).json({ error: true });
+    bcrypt.hash(password, salt, (error, hash) => {
+      if (error) return done(error);
 
       if (!user.verifyPassword(hash)) {
         console.log('invalid password. user=', username);
-        return done(null, false, {message: 'Invalid password.'});
+        return done(null, false, { message: 'Invalid password.' });
       }
 
       return done(null, user);
     });
+
+    return null;
   });
 });
 passport.use(localStrategy);
@@ -68,14 +71,12 @@ const facebookStrategy = new FacebookStrategy({
   clientSecret: FACEBOOK_APP_SECRET,
   callbackURL: '/auth/callback/facebook',
   profileFields: ['id', 'displayName', 'first_name', 'last_name', 'emails', 'photos'],
-  enableProof: true
+  enableProof: true,
 },
-function(accessToken, refreshToken, profile, done) {
+(accessToken, refreshToken, profile, done) => {
   console.log('Successfully login from facebook.');
-  User.findOrCreate(profile, accessToken, function (err, user) {
-    return done(err, user);
-  });
-}
+  User.findOrCreate(profile, accessToken, (err, user) => done(err, user));
+},
 );
 
 // required for passport session
@@ -83,18 +84,18 @@ function(accessToken, refreshToken, profile, done) {
 app.use(session({
   secret: 'secrettexthere',
   saveUninitialized: true,
-  resave: true
+  resave: true,
 }));
 
 passport.use(facebookStrategy);
-passport.serializeUser(function(user, done) { // used to serialize the user for the session
+passport.serializeUser((user, done) => { // used to serialize the user for the session
   // console.log(`Serialize user id= ${user.id}`);
   done(null, user.id);
 });
-passport.deserializeUser(function(id, done) { // used to deserialize the user
+passport.deserializeUser((id, done) => { // used to deserialize the user
   // console.log(`Deserialize user id= ${id}`);
-  User.findById(id, function(err, user){
-    if(!err) done(null, user);
+  User.findById(id, (err, user) => {
+    if (!err) done(null, user);
     else done(err, null);
   });
 });
@@ -110,29 +111,29 @@ passport.authenticate('facebook'));
 app.get('/auth/callback/facebook',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   // on success
-  function(req, res) {
-    req.session.user = req.user;
+  (req, res) => {
+    req.session.user = req.user; // TODO: find a way not to assign param directly
     res.redirect('/?facebook=true');
   },
   // on error; likely to be something FacebookTokenError token invalid or already used token,
   // these errors occur when the user logs in twice with the same token
-  function(err, req, res, next) {
-    if(err) {
-      return res.status(400).json({message: err.message});
+  (err, req, res) => {
+    if (err) {
+      return res.status(400).json({ message: err.message });
     }
-  }
+    return null;
+  },
 );
-
-app.get('/profile', ensureAuthenticated, function(req, res) {
-  return res.status(200).json({ user : res.user });
-});
 
 function ensureAuthenticated(req, res, next) {
   // console.log('req.session.passport.user='+req.session.passport.user)
 
   if (req.isAuthenticated()) { return next(); }
-  return res.status(401).json({ message: 'User is not authorized.'});
+  return res.status(401).json({ message: 'User is not authorized.' });
 }
+
+app.get('/profile',
+  ensureAuthenticated, (req, res) => res.status(200).json({ user: res.user }));
 
 /**
 * Routes
@@ -148,54 +149,56 @@ require('./api/jobs');
 //   return false;
 // };
 
-app.post('/register', function (req, res) {
+app.post('/register', (req, res) => {
   // TODO require name and email
   const { username, password } = req.body;
   const salt = genSalt(username.toLowerCase());
   bcrypt.hash(password, salt, (err, hash) => {
-    if (err)
-      return res.status(500).json({ error: true });
+    if (err) return res.status(500).json({ error: true });
     const user = new User({
       name: username,
-      local: { username: username, password: hash }
+      local: { username, password: hash },
     });
-    user.save(function(err) {
-      if (err) {
-        console.log(`Error while create new user :${err}`);
-        if (err.code == '11000')
+    user.save((err1) => {
+      if (err1) {
+        console.log(`Error while create new user :${err1}`);
+        if (err1.code === '11000') {
           return res.status(403).send('Email already exists.');
+        }
         return res.status(500).send('Internal Server Error.');
       }
       console.log('Create new user');
-      req.login(user, function(err) {
-        if (err) {
-          console.log(`Error while login :${err}`);
-          return res.status(401).send(err);
+      req.login(user, (err2) => {
+        if (err2) {
+          console.log(`Error while login :${err2}`);
+          return res.status(401).send(err2);
         }
         console.log('Login Successfully');
-        return res.status(200).json({user: user.local});
+        return res.status(200).json({ user: user.local });
       });
+      return null;
     });
+    return null;
   });
 });
 
 app.post('/login', passport.authenticate('local'),
   (req, res) => {
     if (req.user) {
-      req.session.user = req.user.local;
-      return res.status(200).json({user: req.user.local});
+      req.session.user = req.user.local; // TODO: find a way not to assign param directly
+      return res.status(200).json({ user: req.user.local });
     }
 
-    return res.status(401).json({error: 'Failed login.'});
+    return res.status(401).json({ error: 'Failed login.' });
   });
 
 app.get('/user', ensureAuthenticated,
   (req, res) => {
     if (req.session.user) {
-      return res.status(200).json({user: req.session.user});
+      return res.status(200).json({ user: req.session.user });
     }
 
-    return res.status(401).json({error: 'Please log in.'});
+    return res.status(401).json({ error: 'Please log in.' });
   });
 
 app.get('/logout', (req, res) => {
@@ -206,7 +209,7 @@ app.get('/logout', (req, res) => {
 /**
  * SPA
  */
-app.get('*', (req, res) => res.sendFile(dirname + '/public/index.html'));
+app.get('*', (req, res) => res.sendFile(`${dirname}/public/index.html`));
 
 /**
  * Run the server

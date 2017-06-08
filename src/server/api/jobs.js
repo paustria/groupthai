@@ -1,4 +1,4 @@
-import {app} from '../app';
+import app from '../app';
 import JobPosting from '../models/jobposting';
 
 app.post('/api/job', (req, res) => {
@@ -9,15 +9,14 @@ app.post('/api/job', (req, res) => {
     // await User.create(
     JobPosting.create(
       {
-        title : `${title}`
-      }
+        title: `${title}`,
+      },
     );
 
     res.sendStatus(200);
   } catch (err) {
     res.status(500).send(err.message);
   }
-
 });
 
 /**
@@ -31,13 +30,13 @@ app.get('/api/jobs', (req, res) => {
       location: {
         city: 'Los Angeles',
         state: 'CA',
-        zip: '90002'
+        zip: '90002',
       },
       contact: {
         phone: null, // Must have at least phone or email.
         email: null,
         website: null,
-        name: 'Alex'
+        name: 'Alex',
       },
       status: 'active', // ENUM
       type: 'restaurant', // ENUM
@@ -45,20 +44,20 @@ app.get('/api/jobs', (req, res) => {
       created_date: 1495514492,
       start_date: 1495514492,
       expired_date: 1498192891,
-      created_by: 12312 // User ID
+      created_by: 12312, // User ID
     },
     {
       title: 'Job Title 2',
       location: {
         city: 'Los Angeles',
         state: 'CA',
-        zip: '90002'
+        zip: '90002',
       },
       contact: {
         phone: null,
         email: null,
         website: null,
-        name: 'Phil'
+        name: 'Phil',
       },
       status: 'inactive',
       type: 'restaurant',
@@ -66,53 +65,53 @@ app.get('/api/jobs', (req, res) => {
       created_date: 1495514492,
       start_date: 1495514492,
       expired_date: 1498192891,
-      created_by: 12312
+      created_by: 12312,
     },
     {
       title: 'Job Title 3',
       location: {
         city: 'Encino',
         state: 'CA',
-        zip: '91316'
+        zip: '91316',
       },
       contact: {
-        phone: null, //Must have at least phone or email.
+        phone: null, // Must have at least phone or email.
         email: null,
         website: null,
-        name: 'Ashley'
+        name: 'Ashley',
       },
       status: 'active',
-      type: 'nursing', //ENUM
+      type: 'nursing', // ENUM
       description: 'description 3',
       created_date: 1495514492,
       start_date: 1495514492,
       expired_date: 1498192891,
-      created_by: 12312 //User ID
+      created_by: 12312, // User ID
     },
     {
       title: 'Job Title 4',
       location: {
         city: 'Beverly Hills',
         state: 'CA',
-        zip: '92134'
+        zip: '92134',
       },
       contact: {
-        phone: null, //Must have at least phone or email.
+        phone: null, // Must have at least phone or email.
         email: null,
         website: null,
-        name: 'Bob'
+        name: 'Bob',
       },
       status: 'active',
-      type: 'massage', //ENUM
+      type: 'massage', // ENUM
       description: 'description 4',
       created_date: 1495514492,
       start_date: 1495514492,
       expired_date: 1498192891,
-      created_by: 12312 //User ID
-    }
+      created_by: 12312, // User ID
+    },
   ];
 
-  res.status(200).json({ jobs: jobs });
+  res.status(200).json({ jobs });
     // const { name, email, message } = req.body;
     // try {
     //     const jobs = await JobPosting.find();
