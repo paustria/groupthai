@@ -23,8 +23,8 @@ const userSchema = mongoose.Schema({
   },
 });
 
-userSchema.methods.verifyPassword = function (password) {
-  return password.localeCompare(this.local.password) == 0;
+userSchema.methods.verifyPassword = function verifyPassword(password) {
+  return password.localeCompare(this.local.password) === 0;
 };
 
 userSchema.statics.findOrCreate = function findOrCreate(profile, token, cb) {
