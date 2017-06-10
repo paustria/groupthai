@@ -1,8 +1,7 @@
-// models/jobposting.js
 const mongoose = require('mongoose');
 
 // define the schema for our job posting model
-const jobPostingSchema = mongoose.Schema({
+const jobSchema = mongoose.Schema({
   id: Number,
   title: String,
   description: String,
@@ -23,12 +22,10 @@ const jobPostingSchema = mongoose.Schema({
     line_id: String,
   },
   img_loc: [String],
-
   created_date: Number,
   closed_date: Number,
   created_by: String,
   business_categories: [String],
 });
 
-// create the model for jobposting and expose it to our app
-module.exports = mongoose.model('JobPosting', jobPostingSchema);
+module.exports = mongoose.model('Job', jobSchema);

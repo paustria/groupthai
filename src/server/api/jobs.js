@@ -1,5 +1,5 @@
 import app from '../app';
-import JobPosting from '../models/jobposting';
+import Job from '../models/job';
 
 app.post('/api/job', (req, res) => {
   const { title } = req.body;
@@ -7,7 +7,7 @@ app.post('/api/job', (req, res) => {
 
   try {
     // await User.create(
-    JobPosting.create(
+    Job.create(
       {
         title: `${title}`,
       },
@@ -114,7 +114,7 @@ app.get('/api/jobs', (req, res) => {
   res.status(200).json({ jobs });
     // const { name, email, message } = req.body;
     // try {
-    //     const jobs = await JobPosting.find();
+    //     const jobs = await Job.find();
     //     res.status(200).send(jobs);
     // } catch (err) {
     //     res.status(500).send(err.message);
