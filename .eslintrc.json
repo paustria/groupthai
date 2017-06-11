@@ -52,6 +52,8 @@
         "match"
       ]
     }],
-    "react/forbid-prop-types": [0]
+    "react/forbid-prop-types": [0],
+    "react/no-did-mount-set-state": [0],
+    "no-confusing-arrow": [0]
   }
 }

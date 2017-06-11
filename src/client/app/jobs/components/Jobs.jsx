@@ -1,38 +1,35 @@
-/*eslint-disable no-unused-vars*/
 import _ from 'lodash';
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {Card, CardTitle, CardText} from 'material-ui/Card';
+import { Card, CardTitle, CardText } from 'material-ui/Card';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TextField from 'material-ui/TextField';
 import Container from 'muicss/lib/react/container';
 import Row from 'muicss/lib/react/row';
 import Col from 'muicss/lib/react/col';
-/*eslint-enable no-unused-vars*/
 
 const initialState = {
   type: 'all',
   status: 'active',
   jobs: null,
   jobTypes: [],
-  keyword: ''
+  keyword: '',
 };
 
 const styles = {
-  jobType : {float:'right', margin:20, textTransform:'capitalize'},
-  jobTypes : {textTransform:'capitalize'}
+  jobType: { float: 'right', margin: 20, textTransform: 'capitalize' },
+  jobTypes: { textTransform: 'capitalize' },
 };
 
 async function fetchJobs() {
-  const response = await fetch('/api/jobs', {credentials: 'same-origin'});
+  const response = await fetch('/api/jobs', { credentials: 'same-origin' });
   const res = await response.json();
 
   return res.jobs;
 }
 
-const getJobTypes = (jobs) => _.keys(_.groupBy(jobs, 'type'));
+const getJobTypes = jobs => _.keys(_.groupBy(jobs, 'type'));
 
 class Jobs extends Component {
   constructor(props) {
@@ -42,7 +39,7 @@ class Jobs extends Component {
 
   async componentDidMount() {
     const jobs = await fetchJobs();
-    this.setState({jobs: jobs, jobTypes: ['all'].concat(getJobTypes(jobs))});
+    this.setState({ jobs, jobTypes: ['all'].concat(getJobTypes(jobs)) });
   }
 
   // this is something similar to job.location.city.toLowerCase().indexOf(keyword) >= 0
@@ -50,7 +47,7 @@ class Jobs extends Component {
     const c = attribute.split('.');
     const next = attribute.split('.').slice(1, c.length).join('.');
 
-    if (c.length == 1) {
+    if (c.length === 1) {
       return col[c[0]].toLowerCase().includes(query);
     }
 
@@ -64,12 +61,12 @@ class Jobs extends Component {
       'title',
       'description',
       'location.city',
-      'location.state'
+      'location.state',
     ];
 
     return (job.status === status) &&
       (this.state.type === 'all' || job.type === type) &&
-      columns.some((col) => this.isIncluded(job, col, query))
+      columns.some(col => this.isIncluded(job, col, query));
   }
 
   render() {
@@ -82,10 +79,10 @@ class Jobs extends Component {
           <Col md="5">
             <TextField
               floatingLabelText="Keyword"
-              floatingLabelFixed={true}
+              floatingLabelFixed
               hintText="title, description or location"
-              onChange={(event, index) =>
-                this.setState({keyword:event.target.value})}
+              onChange={event =>
+                this.setState({ keyword: event.target.value })}
             />
           </Col>
           <Col md="5">
@@ -93,35 +90,40 @@ class Jobs extends Component {
               style={styles.jobTypes}
               floatingLabelText="Type"
               value={this.state.type}
-              onChange={(event, index, type) => this.setState({type})}
+              onChange={(event, index, type) => this.setState({ type })}
             >
               {
                 jobTypes && jobTypes.map((type, i) =>
-                  <MenuItem style={styles.jobTypes} key={i}
-                    value={type} primaryText={type} />
+                  <MenuItem
+                    style={styles.jobTypes}
+                    key={i}
+                    value={type} primaryText={type}
+                  />,
                 )
               }
             </SelectField>
           </Col>
         </Row>
-       {
+        {
          jobs && jobs.map((job, i) =>
            this.isMatchedFiltered(job) ? (<Card key={i}>
              <div style={styles.jobType}>{job.type}</div>
-             <CardTitle title={job.title}
-               subtitle={`${job.location.city}, ${job.location.state}`} />
+             <CardTitle
+               title={job.title}
+               subtitle={`${job.location.city}, ${job.location.state}`}
+             />
              <CardText>
                {job.description}
              </CardText>
            </Card>) : '')
-       }
-     </Container>
+         }
+      </Container>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  data: state
+const mapStateToProps = state => ({
+  data: state,
 });
 
 export default connect(mapStateToProps)(Jobs);
