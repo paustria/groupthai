@@ -54,6 +54,9 @@
     }],
     "react/forbid-prop-types": [0],
     "react/no-did-mount-set-state": [0],
-    "no-confusing-arrow": [0]
+    "no-confusing-arrow": [0],
+    "no-underscore-dangle": [1, {
+        "allow": ["_id"]
+    }]
   }
 }

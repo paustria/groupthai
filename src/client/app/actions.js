@@ -1,13 +1,13 @@
 import * as types from './constants';
 
 export function login(user) {
+  const info = user.local ? user.local : user.facebook;
+
   const obj = {
-    _id: user.id,
-    displayName: user.username || user.name,
+    _id: user._id,
+    displayName: info.username || user.name,
     isFacebook: !!user.facebook,
-    email: user.email ||
-          (user.facebook ? user.facebook.email : null) ||
-          user.username,
+    email: info.email || info.username || null,
   };
 
   return { type: types.RECEIVE_USER, user: obj };

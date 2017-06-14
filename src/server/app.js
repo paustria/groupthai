@@ -186,7 +186,7 @@ app.post('/login', passport.authenticate('local'),
   (req, res) => {
     if (req.user) {
       req.session.user = req.user.local; // TODO: find a way not to assign param directly
-      return res.status(200).json({ user: req.user.local });
+      return res.status(200).json({ user: req.user });
     }
 
     return res.status(401).json({ error: 'Failed login.' });
@@ -199,6 +199,20 @@ app.get('/user', ensureAuthenticated,
     }
 
     return res.status(401).json({ error: 'Please log in.' });
+  });
+
+app.put('/user', ensureAuthenticated,
+  async (req, res) => {
+    console.log('phily', req.body);
+    const { _id, name, email } = req.body;
+    const user = await User.findById(_id).exec();
+
+    // user.set(page)
+    // if (req.session.user) {
+    //   return res.status(200).json({ user: req.session.user });
+    // }
+    //
+    // return res.status(401).json({ error: 'Please log in.' });
   });
 
 app.get('/logout', (req, res) => {
