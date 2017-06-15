@@ -9,6 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
+import CreateJob from 'app/jobs/components/CreateJob';
 
 const styles = {
   headline: {
@@ -94,12 +95,7 @@ class Dashboard extends Component {
       <Tabs>
         { !user.isFacebook && <Tab label="Profile" >{profileTab}</Tab>}
         <Tab label="Post Jobs" >
-          <div>
-            <h2 style={styles.headline}>Post Jobs</h2>
-            <p>
-              This is another example tab.
-            </p>
-          </div>
+          <CreateJob />
         </Tab>
       </Tabs>
     </Container>) : <div />;
