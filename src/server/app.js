@@ -162,7 +162,7 @@ app.post('/register', (req, res) => {
     user.save((err1) => {
       if (err1) {
         console.log(`Error while create new user :${err1}`);
-        if (err1.code === '11000') {
+        if (err1.code === 11000) {
           return res.status(403).send('Email already exists.');
         }
         return res.status(500).send('Internal Server Error.');

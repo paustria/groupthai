@@ -54,34 +54,13 @@ class Login extends Component {
   async handleSubmit() {
     const isRegisterView = this.props.location.pathname === '/register';
     const url = isRegisterView ? '/register' : '/login';
+    const { email, password } = this.state;
+    const { login } = this.props;
 
     if (this.validateForm()) {
-      const options = {
-        method: 'POST',
-        body: JSON.stringify({
-          username: this.state.email,
-          password: this.state.password,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'same-origin',
-      };
-
       try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          if (response.statusText === 'Unauthorized') {
-            throw Error('Username and/or password combination is incorrect.');
-          }
-          if (response.statusText === 'Forbidden') {
-            throw Error('Email is already existed.');
-          }
-          throw Error(response.statusText);
-        }
-        const body = await response.json();
         auth.setAuth(true);
-        this.props.login(body.user);
+        await login(email, password, url);
       } catch (err) {
         this.setState({ emailError: err.message });
       }
@@ -217,7 +196,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: user => dispatch(app.actions.login(user)),
+  login: (username, password, url) =>
+    dispatch(app.actions.fetchLogin(username, password, url)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
