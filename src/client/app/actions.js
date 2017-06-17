@@ -1,6 +1,6 @@
 import * as types from './constants';
 
-const login = (user) => {
+export const login = (user) => {
   const info = user.local ? user.local : user.facebook;
 
   const obj = {
