@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
+import FontIcon from 'material-ui/FontIcon';
 
 const initialState = {
   email: '',
@@ -25,7 +26,12 @@ const initialState = {
 const style = {
   form: { marginLeft: 20 },
   formTitle: { paddingTop: 20, marginBottom: 0 },
-  formBtn: { margin: 20 },
+  formBtn: {
+    margin: 20,
+    display: 'flex',
+    justifyContent: 'space-around',
+    paddingBottom: '20px',
+  },
 };
 
 class Login extends Component {
@@ -172,11 +178,14 @@ class Login extends Component {
                 <Divider />
                 <div style={style.formBtn} className="mui--text-center">
                   <RaisedButton label={viewText} primary onClick={this.handleSubmit} />
+                  <RaisedButton
+                    href="/auth/facebook"
+                    label="facebook login"
+                    secondary
+                    icon={<FontIcon className="muidocs-icon-custom-github" />}
+                  />
                 </div>
               </form>
-              <div style={style.formBtn} className="mui--text-center">
-                <a href="/auth/facebook">Test facebook login</a>
-              </div>
             </Paper>
           </Col>
         </Row>
