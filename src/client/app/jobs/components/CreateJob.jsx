@@ -7,8 +7,15 @@ import Col from 'muicss/lib/react/col';
 import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import DatePicker from 'material-ui/DatePicker';
 
 const initialState = {
+};
+
+const styles = {
+  subTitle: { fontSize: '2rem', paddingTop: '20px' },
+  description: { paddingTop: '20px' },
+  submitBtn: { margin: '20px 0' },
 };
 
 class CreateJob extends Component {
@@ -24,12 +31,15 @@ class CreateJob extends Component {
   }
 
   render() {
+    const { subTitle, description, submitBtn } = styles;
+
     return (
       <Container>
         <Row>
           <Col md="12">
+            <div style={subTitle}>Required Fields</div>
             <TextField
-              floatingLabelText="Job Title"
+              floatingLabelText="Job Title*"
               floatingLabelFixed
               hintText="Please fill job title"
               fullWidth
@@ -41,8 +51,8 @@ class CreateJob extends Component {
         <Row>
           <Col md="12">
             <TextField
+              floatingLabelText="Job description*"
               hintText="Please fill job description"
-              floatingLabelText="Job description"
               floatingLabelFixed
               multiLine
               fullWidth
@@ -53,7 +63,7 @@ class CreateJob extends Component {
         <Row>
           <Col md="12">
             <SelectField
-              floatingLabelText="Job type"
+              floatingLabelText="Job type*"
               value={this.state.value}
               onChange={this.handleChange}
             >
@@ -65,7 +75,128 @@ class CreateJob extends Component {
         </Row>
         <Row>
           <Col md="12">
-            <RaisedButton label="Post Job" primary onClick={this.handleSubmit} />
+            <TextField
+              hintText="Contact Name"
+              floatingLabelText="Contact Name*"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <div style={description}>*At least one of the following.</div>
+        <Row>
+          <Col md="6">
+            <TextField
+              hintText="Phone"
+              floatingLabelText="Phone"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+          <Col md="6">
+            <TextField
+              hintText="Email"
+              floatingLabelText="Email"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <div style={subTitle}>Optional Fields</div>
+            <TextField
+              hintText="Please fill address 1"
+              floatingLabelText="Address"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <TextField
+              hintText="Please fill address 2"
+              floatingLabelText="Address"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="4">
+            <TextField
+              hintText="City"
+              floatingLabelText="City"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+          <Col md="4">
+            <TextField
+              hintText="State"
+              floatingLabelText="State"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+          <Col md="4">
+            <TextField
+              hintText="Zipcode"
+              floatingLabelText="Zipcode"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <TextField
+              hintText="Organization Name"
+              floatingLabelText="Organization Name"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <TextField
+              hintText="Website"
+              floatingLabelText="Website"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <TextField
+              hintText="Line ID"
+              floatingLabelText="Line ID"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <DatePicker
+              hintText="Expired Date"
+              floatingLabelText="Expired Date"
+              floatingLabelFixed
+              fullWidth
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col md="12">
+            <RaisedButton
+              style={submitBtn}
+              label="Post Job"
+              primary
+              onClick={this.handleSubmit}
+            />
           </Col>
         </Row>
       </Container>
