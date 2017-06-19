@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import genSalt from '../client/utils/salt';
-import { dirname } from '../../config';
+import { APP_ROOT, APP_PORT, MONGO_URI } from '../../config';
 import User from './models/user';
 
 require('dotenv').config();
@@ -17,9 +17,9 @@ const app = express();
 
 export default app;
 
-app.set('port', process.env.PORT || 3000)
+app.set('port', APP_PORT)
 .use(morgan('combined'))
-.use(express.static(`${dirname}/public`))
+.use(express.static(`${APP_ROOT}/public`))
 .use(bodyParser.json())
 .use(bodyParser.urlencoded({ extended: true }));
 
@@ -27,7 +27,7 @@ app.set('port', process.env.PORT || 3000)
 * Mongoose
 */
 const MONGODB = {
-  uri: process.env.MONGODB_URI || 'mongodb://localhost:27017/groupthai',
+  uri: MONGO_URI,
 };
 mongoose.connect(MONGODB.uri);
 
@@ -223,7 +223,7 @@ app.get('/logout', (req, res) => {
 /**
  * SPA
  */
-app.get('*', (req, res) => res.sendFile(`${dirname}/public/index.html`));
+app.get('*', (req, res) => res.sendFile(`${APP_ROOT}/public/index.html`));
 
 /**
  * Run the server
