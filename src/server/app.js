@@ -93,7 +93,6 @@ passport.serializeUser((user, done) => { // used to serialize the user for the s
   done(null, user.id);
 });
 passport.deserializeUser((id, done) => { // used to deserialize the user
-  // console.log(`Deserialize user id= ${id}`);
   User.findById(id, (err, user) => {
     if (!err) done(null, user);
     else done(err, null);
@@ -112,7 +111,6 @@ app.get('/auth/callback/facebook',
   passport.authenticate('facebook', { failureRedirect: '/' }),
   // on success
   (req, res) => {
-    req.session.user = req.user; // TODO: find a way not to assign param directly
     res.redirect('/?facebook=true');
   },
   // on error; likely to be something FacebookTokenError token invalid or already used token,
@@ -185,7 +183,6 @@ app.post('/register', (req, res) => {
 app.post('/login', passport.authenticate('local'),
   (req, res) => {
     if (req.user) {
-      req.session.user = req.user.local; // TODO: find a way not to assign param directly
       return res.status(200).json({ user: req.user });
     }
 
@@ -194,8 +191,8 @@ app.post('/login', passport.authenticate('local'),
 
 app.get('/user', ensureAuthenticated,
   (req, res) => {
-    if (req.session.user) {
-      return res.status(200).json({ user: req.session.user });
+    if (req.user) {
+      return res.status(200).json({ user: req.user });
     }
 
     return res.status(401).json({ error: 'Please log in.' });
@@ -203,7 +200,6 @@ app.get('/user', ensureAuthenticated,
 
 app.put('/user', ensureAuthenticated,
   async (req, res) => {
-    console.log('phily', req.body);
     const { _id, name, email } = req.body;
     const user = await User.findById(_id).exec();
 
