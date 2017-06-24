@@ -8,12 +8,14 @@ import reducer from 'app/reducers';
 
 import './stylesheets/core.scss';
 
+require('font-awesome-webpack');
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middleware = [
-  thunkMiddleware
+  thunkMiddleware,
 ];
 const store = createStore(reducer, composeEnhancers(
-  applyMiddleware(...middleware)
+  applyMiddleware(...middleware),
 ));
 
 store.subscribe(() => {
@@ -22,7 +24,7 @@ store.subscribe(() => {
 
 ReactDom.render(
   <Provider store={store}>
-    <App></App>
+    <App />
   </Provider>,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
