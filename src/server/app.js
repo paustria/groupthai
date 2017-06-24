@@ -172,7 +172,7 @@ app.post('/register', (req, res) => {
           return res.status(401).send(err2);
         }
         console.log('Login Successfully');
-        return res.status(200).json({ user: user.local });
+        return res.status(200).json({ user });
       });
       return null;
     });
