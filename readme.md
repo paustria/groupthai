@@ -1,5 +1,6 @@
 ## Set up project
 (If you don't have npm install, download it [here](https://nodejs.org/en/download/).)
+(If you don't have yarn install, download it [here](https://yarnpkg.com/en/docs/install).)
 
 ```
 sudo npm install -g webpack
@@ -8,7 +9,7 @@ sudo npm install -g webpack
 ### Install Node modules
 
 ```
-sudo npm install
+yarn install
 ```
 
 ### Start the server
