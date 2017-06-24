@@ -32,6 +32,10 @@ const style = {
     justifyContent: 'space-around',
     paddingBottom: '20px',
   },
+  fbBtn: {
+    background: '#3b5999',
+    color: '#fff',
+  },
 };
 
 class Login extends Component {
@@ -181,8 +185,9 @@ class Login extends Component {
                   <RaisedButton
                     href="/auth/facebook"
                     label="facebook login"
-                    secondary
-                    icon={<FontIcon className="muidocs-icon-custom-github" />}
+                    buttonStyle={style.fbBtn}
+                    labelStyle={{ color: '#fff' }}
+                    icon={<i className="fa fa-facebook-official" aria-hidden="true" />}
                   />
                 </div>
               </form>
