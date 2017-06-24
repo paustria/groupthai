@@ -12,7 +12,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import Paper from 'material-ui/Paper';
 import Divider from 'material-ui/Divider';
-import FontIcon from 'material-ui/FontIcon';
 
 const initialState = {
   email: '',
