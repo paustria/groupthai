@@ -138,15 +138,6 @@ app.get('/profile',
 */
 require('./api/jobs');
 
-/**
-* Login endpoint
-*/
-// const doesUserExist = (user) => {
-//   // TODO: check in DB.
-//   if (users[user]) return true;
-//   return false;
-// };
-
 app.post('/register', (req, res) => {
   // TODO require name and email
   const { username, password } = req.body;
