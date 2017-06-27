@@ -12,41 +12,14 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { connect } from 'react-redux';
 import Jobs from 'app/jobs/components/Jobs';
-import { auth } from 'utils/auth';
 import Home from './Home';
 import Nav from './Nav';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import NotFound from './NotFound';
+import PrivateRoute from './PrivateRoute';
 
 injectTapEventPlugin();
-
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const isLoggedIn = auth.getAuth();
-
-  return (
-    <Route
-      {...rest}
-      render={props => (
-        isLoggedIn ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location },
-            }}
-          />
-        )
-      )}
-    />
-  );
-};
-
-PrivateRoute.propTypes = {
-  component: PropTypes.func,
-  location: PropTypes.object,
-};
 
 const App = () => (
   <MuiThemeProvider>
