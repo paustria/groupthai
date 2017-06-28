@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { auth } from 'utils/auth';
 import app from 'app';
 
 import Container from 'muicss/lib/react/container';
@@ -68,7 +67,6 @@ class Login extends Component {
 
     if (this.validateForm()) {
       try {
-        auth.setAuth(true);
         await login(email, password, url);
       } catch (err) {
         this.setState({ emailError: err.message });

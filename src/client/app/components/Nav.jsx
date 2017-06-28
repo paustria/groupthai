@@ -22,13 +22,8 @@ const styles = {
 };
 
 const Nav = withRouter(({ user, logout }) => {
-  const onClickLogout = async function onClickLogout() {
+  const onClickLogout = () => {
     try {
-      const response = await fetch('/logout', {});
-
-      if (!response.ok) {
-        throw Error('Not Authorized');
-      }
       logout();
       window.location.href = '/';
     } catch (err) {
