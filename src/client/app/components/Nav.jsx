@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-has-content */
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -43,7 +44,10 @@ const Nav = withRouter(({ user, logout }) => {
       anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
       iconStyle={styles.textWhite}
     >
-      <MenuItem primaryText={<Link to="/dashboard">Dashboard</Link>} />
+      <MenuItem
+        containerElement={<Link to="/dashboard" />}
+        primaryText="Dashboard"
+      />
       <MenuItem onClick={onClickLogout} primaryText="Sign out" />
     </IconMenu>
   );
