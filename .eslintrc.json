@@ -57,6 +57,9 @@
     "no-confusing-arrow": [0],
     "no-underscore-dangle": [1, {
         "allow": ["_id", "__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"]
+    }],
+    "import/no-unresolved": [2, {
+      "ignore": ["^(shared)"]
     }]
   }
 }

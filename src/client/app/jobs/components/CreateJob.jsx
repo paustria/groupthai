@@ -8,14 +8,40 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
+import { JOB_TYPES } from 'shared/constants';
 
 const initialState = {
+  draft: {
+    title: '',
+    description: '',
+    address: {
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zipcode: '',
+    },
+    contact: {
+      organizationName: '',
+      name: '',
+      phone: [],
+      email: '',
+      website: '',
+      lineID: '',
+    },
+    imgLoc: [],
+    expiredDate: 0,
+    createdBy: '',
+    updatedBy: '',
+    businessCategories: '',
+  },
 };
 
 const styles = {
   subTitle: { fontSize: '2rem', paddingTop: '20px' },
   description: { paddingTop: '20px' },
   submitBtn: { margin: '20px 0' },
+  jobTypes: { textTransform: 'capitalize' },
 };
 
 class CreateJob extends Component {
@@ -23,15 +49,36 @@ class CreateJob extends Component {
     super(props);
     this.state = initialState;
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.setTitle = this.setTitle.bind(this);
+    this.handleJobTypeChange = this.handleJobTypeChange.bind(this);
+  }
+
+  setTitle(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        title: value,
+      },
+    });
+  }
+
+  handleJobTypeChange(event, index, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        businessCategories: value,
+      },
+    });
   }
 
   handleSubmit() {
     // TODO :: Do something.
-    this.setState();
+    console.log(this.state);
   }
 
   render() {
-    const { subTitle, description, submitBtn } = styles;
+    const { subTitle, description, submitBtn, jobTypes } = styles;
+    const { draft } = this.state;
 
     return (
       <Container>
@@ -43,8 +90,7 @@ class CreateJob extends Component {
               floatingLabelFixed
               hintText="Please fill job title"
               fullWidth
-              onChange={event =>
-                this.setState({ keyword: event.target.value })}
+              onChange={this.setTitle}
             />
           </Col>
         </Row>
@@ -64,12 +110,18 @@ class CreateJob extends Component {
           <Col md="12">
             <SelectField
               floatingLabelText="Job type*"
-              value={this.state.value}
-              onChange={this.handleChange}
+              value={draft.businessCategories}
+              onChange={this.handleJobTypeChange}
             >
-              <MenuItem value={1} primaryText="Restaurant" />
-              <MenuItem value={2} primaryText="Nursing" />
-              <MenuItem value={3} primaryText="Massage" />
+              {
+                JOB_TYPES.map(type =>
+                  <MenuItem
+                    key={type}
+                    style={jobTypes}
+                    value={type}
+                    primaryText={type}
+                  />)
+              }
             </SelectField>
           </Col>
         </Row>
