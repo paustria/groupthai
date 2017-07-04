@@ -50,7 +50,20 @@ class CreateJob extends Component {
     this.state = initialState;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setTitle = this.setTitle.bind(this);
-    this.handleJobTypeChange = this.handleJobTypeChange.bind(this);
+    this.setDescription = this.setDescription.bind(this);
+    this.setName = this.setName.bind(this);
+    this.setPhone = this.setPhone.bind(this);
+    this.setEmail = this.setEmail.bind(this);
+    this.setAddress1 = this.setAddress1.bind(this);
+    this.setAddress2 = this.setAddress2.bind(this);
+    this.setCity = this.setCity.bind(this);
+    this.setState = this.setState.bind(this);
+    this.setZip = this.setZip.bind(this);
+    this.setOrganization = this.setOrganization.bind(this);
+    this.setJobType = this.setJobType.bind(this);
+    this.setWebsite = this.setWebsite.bind(this);
+    this.setLine = this.setLine.bind(this);
+    this.setExpired = this.setExpired.bind(this);
   }
 
   setTitle(event, value) {
@@ -62,11 +75,168 @@ class CreateJob extends Component {
     });
   }
 
-  handleJobTypeChange(event, index, value) {
+  setDescription(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        description: value,
+      },
+    });
+  }
+
+  setName(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        contact: {
+          ...this.state.draft.contact,
+          name: value,
+        },
+      },
+    });
+  }
+
+  setPhone(event, value) {
+    const phone = [...this.state.draft.contact.phone];
+
+    if (phone.includes(value)) return;
+
+    phone.push(value);
+
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        contact: {
+          ...this.state.draft.contact,
+          phone,
+        },
+      },
+    });
+  }
+
+  setEmail(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        contact: {
+          ...this.state.draft.contact,
+          email: value,
+        },
+      },
+    });
+  }
+
+  setAddress1(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        address: {
+          ...this.state.draft.address,
+          address1: value,
+        },
+      },
+    });
+  }
+
+  setAddress2(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        address: {
+          ...this.state.draft.address,
+          address2: value,
+        },
+      },
+    });
+  }
+
+  setCity(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        address: {
+          ...this.state.draft.address,
+          city: value,
+        },
+      },
+    });
+  }
+
+  setState(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        address: {
+          ...this.state.draft.address,
+          state: value,
+        },
+      },
+    });
+  }
+
+  setZip(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        address: {
+          ...this.state.draft.address,
+          zipcode: value,
+        },
+      },
+    });
+  }
+
+  setOrganization(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        contact: {
+          ...this.state.draft.contact,
+          organizationName: value,
+        },
+      },
+    });
+  }
+
+  setJobType(event, index, value) {
     this.setState({
       draft: {
         ...this.state.draft,
         businessCategories: value,
+      },
+    });
+  }
+
+  setWebsite(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        contact: {
+          ...this.state.draft.contact,
+          website: value,
+        },
+      },
+    });
+  }
+
+  setLine(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        contact: {
+          ...this.state.draft.contact,
+          line: value,
+        },
+      },
+    });
+  }
+
+
+  setExpired(event, value) {
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        expiredDate: value,
       },
     });
   }
@@ -103,6 +273,7 @@ class CreateJob extends Component {
               multiLine
               fullWidth
               rows={2}
+              onChange={this.setDescription}
             />
           </Col>
         </Row>
@@ -111,7 +282,7 @@ class CreateJob extends Component {
             <SelectField
               floatingLabelText="Job type*"
               value={draft.businessCategories}
-              onChange={this.handleJobTypeChange}
+              onChange={this.setJobType}
             >
               {
                 JOB_TYPES.map(type =>
@@ -132,6 +303,7 @@ class CreateJob extends Component {
               floatingLabelText="Contact Name*"
               floatingLabelFixed
               fullWidth
+              onChange={this.setName}
             />
           </Col>
         </Row>
@@ -143,6 +315,7 @@ class CreateJob extends Component {
               floatingLabelText="Phone"
               floatingLabelFixed
               fullWidth
+              onChange={this.setPhone}
             />
           </Col>
           <Col md="6">
@@ -151,6 +324,7 @@ class CreateJob extends Component {
               floatingLabelText="Email"
               floatingLabelFixed
               fullWidth
+              onChange={this.setEmail}
             />
           </Col>
         </Row>
@@ -162,6 +336,7 @@ class CreateJob extends Component {
               floatingLabelText="Address"
               floatingLabelFixed
               fullWidth
+              onChange={this.setAddress1}
             />
           </Col>
         </Row>
@@ -172,6 +347,7 @@ class CreateJob extends Component {
               floatingLabelText="Address"
               floatingLabelFixed
               fullWidth
+              onChange={this.setAddress2}
             />
           </Col>
         </Row>
@@ -182,6 +358,7 @@ class CreateJob extends Component {
               floatingLabelText="City"
               floatingLabelFixed
               fullWidth
+              onChange={this.setCity}
             />
           </Col>
           <Col md="4">
@@ -190,6 +367,7 @@ class CreateJob extends Component {
               floatingLabelText="State"
               floatingLabelFixed
               fullWidth
+              onChange={this.setState}
             />
           </Col>
           <Col md="4">
@@ -198,6 +376,7 @@ class CreateJob extends Component {
               floatingLabelText="Zipcode"
               floatingLabelFixed
               fullWidth
+              onChange={this.setZip}
             />
           </Col>
         </Row>
@@ -208,6 +387,7 @@ class CreateJob extends Component {
               floatingLabelText="Organization Name"
               floatingLabelFixed
               fullWidth
+              onChange={this.setOrganization}
             />
           </Col>
         </Row>
@@ -218,6 +398,7 @@ class CreateJob extends Component {
               floatingLabelText="Website"
               floatingLabelFixed
               fullWidth
+              onChange={this.setWebsite}
             />
           </Col>
         </Row>
@@ -228,6 +409,7 @@ class CreateJob extends Component {
               floatingLabelText="Line ID"
               floatingLabelFixed
               fullWidth
+              onChange={this.setLine}
             />
           </Col>
         </Row>
@@ -238,6 +420,7 @@ class CreateJob extends Component {
               floatingLabelText="Expired Date"
               floatingLabelFixed
               fullWidth
+              onChange={this.setExpired}
             />
           </Col>
         </Row>
