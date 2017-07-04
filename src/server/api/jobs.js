@@ -1,19 +1,10 @@
 import app from '../app';
 import Job from '../models/job';
 
-app.post('/api/job', (req, res) => {
-  const { title } = req.body;
-  console.log(`Job's title is ${title}.`);
-
+app.post('/api/job', async (req, res) => {
   try {
-    // await User.create(
-    Job.create(
-      {
-        title: `${title}`,
-      },
-    );
-
-    res.sendStatus(200);
+    const job = await Job.create(req.body);
+    res.status(200).send(job);
   } catch (err) {
     res.status(500).send(err.message);
   }
