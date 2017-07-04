@@ -9,6 +9,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import { JOB_TYPES } from 'shared/constants';
+import { dateToEpoch } from 'shared/utils/time';
 
 const initialState = {
   draft: {
@@ -29,7 +30,7 @@ const initialState = {
       website: '',
       lineID: '',
     },
-    imgLoc: [],
+    imgLoc: [], // This feature is disabled.
     expiredDate: 0,
     createdBy: '',
     updatedBy: '',
@@ -42,6 +43,37 @@ const styles = {
   description: { paddingTop: '20px' },
   submitBtn: { margin: '20px 0' },
   jobTypes: { textTransform: 'capitalize' },
+};
+
+const postJob = async (job) => {
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(job),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'same-origin',
+  };
+
+  try {
+    const response = await fetch('api/job', options);
+
+    if (!response.ok) {
+      if (response.statusText === 'Unauthorized') {
+        throw Error('Username and/or password combination is incorrect.');
+      }
+      if (response.statusText === 'Forbidden') {
+        throw Error('Email is already existed.');
+      }
+      throw Error(response.statusText);
+    }
+
+    const jobDoc = await response.json();
+
+    return `successfully created ${jobDoc.title}.`;
+  } catch (err) {
+    throw Error(err.message);
+  }
 };
 
 class CreateJob extends Component {
@@ -57,7 +89,7 @@ class CreateJob extends Component {
     this.setAddress1 = this.setAddress1.bind(this);
     this.setAddress2 = this.setAddress2.bind(this);
     this.setCity = this.setCity.bind(this);
-    this.setState = this.setState.bind(this);
+    this.setCountryState = this.setCountryState.bind(this);
     this.setZip = this.setZip.bind(this);
     this.setOrganization = this.setOrganization.bind(this);
     this.setJobType = this.setJobType.bind(this);
@@ -97,18 +129,12 @@ class CreateJob extends Component {
   }
 
   setPhone(event, value) {
-    const phone = [...this.state.draft.contact.phone];
-
-    if (phone.includes(value)) return;
-
-    phone.push(value);
-
     this.setState({
       draft: {
         ...this.state.draft,
         contact: {
           ...this.state.draft.contact,
-          phone,
+          phone: [value],
         },
       },
     });
@@ -162,7 +188,7 @@ class CreateJob extends Component {
     });
   }
 
-  setState(event, value) {
+  setCountryState(event, value) {
     this.setState({
       draft: {
         ...this.state.draft,
@@ -233,17 +259,19 @@ class CreateJob extends Component {
 
 
   setExpired(event, value) {
+    const expiredDate = dateToEpoch(value);
+
     this.setState({
       draft: {
         ...this.state.draft,
-        expiredDate: value,
+        expiredDate,
       },
     });
   }
 
-  handleSubmit() {
-    // TODO :: Do something.
-    console.log(this.state);
+  async handleSubmit() {
+    const jobs = await postJob(this.state.draft);
+    console.log(jobs);
   }
 
   render() {
@@ -333,7 +361,7 @@ class CreateJob extends Component {
             <div style={subTitle}>Optional Fields</div>
             <TextField
               hintText="Please fill address 1"
-              floatingLabelText="Address"
+              floatingLabelText="Address 1"
               floatingLabelFixed
               fullWidth
               onChange={this.setAddress1}
@@ -344,7 +372,7 @@ class CreateJob extends Component {
           <Col md="12">
             <TextField
               hintText="Please fill address 2"
-              floatingLabelText="Address"
+              floatingLabelText="Address 2"
               floatingLabelFixed
               fullWidth
               onChange={this.setAddress2}
@@ -367,7 +395,7 @@ class CreateJob extends Component {
               floatingLabelText="State"
               floatingLabelFixed
               fullWidth
-              onChange={this.setState}
+              onChange={this.setCountryState}
             />
           </Col>
           <Col md="4">
