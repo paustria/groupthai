@@ -25,6 +25,7 @@ const JobSchema = mongoose.Schema({
   createdBy: String,
   updatedBy: String,
   businessCategories: [{ type: String, enum: JOB_TYPES }],
+  isActive: Boolean,
 });
 
 module.exports = mongoose.model('Job', JobSchema);

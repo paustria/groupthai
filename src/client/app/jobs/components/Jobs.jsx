@@ -1,4 +1,6 @@
-import _ from 'lodash';
+import map from 'lodash/map';
+import uniq from 'lodash/uniq';
+import flatten from 'lodash/flatten';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Card, CardTitle, CardText } from 'material-ui/Card';
@@ -11,7 +13,6 @@ import Col from 'muicss/lib/react/col';
 
 const initialState = {
   type: 'all',
-  status: 'active',
   jobs: null,
   jobTypes: [],
   keyword: '',
@@ -29,7 +30,12 @@ async function fetchJobs() {
   return res.jobs;
 }
 
-const getJobTypes = jobs => _.keys(_.groupBy(jobs, 'type'));
+const getJobTypes = (jobs) => {
+  const types = map(jobs, 'businessCategories');
+  const unique = uniq(flatten(types));
+
+  return unique;
+};
 
 class Jobs extends Component {
   constructor(props) {
@@ -55,17 +61,17 @@ class Jobs extends Component {
   }
 
   isMatchedFiltered(job) {
-    const { keyword, status, type } = this.state;
+    const { keyword, type } = this.state;
     const query = keyword.toLowerCase();
     const columns = [
       'title',
       'description',
-      'location.city',
-      'location.state',
+      'address.city',
+      'address.state',
     ];
 
-    return (job.status === status) &&
-      (this.state.type === 'all' || job.type === type) &&
+    return (job.isActive) &&
+      (this.state.type === 'all' || job.businessCategories.includes(type)) &&
       columns.some(col => this.isIncluded(job, col, query));
   }
 
@@ -107,10 +113,10 @@ class Jobs extends Component {
         {
          jobs && jobs.map((job, i) =>
            this.isMatchedFiltered(job) ? (<Card key={i}>
-             <div style={styles.jobType}>{job.type}</div>
+             <div style={styles.jobType}>{job.businessCategories.join(', ')}</div>
              <CardTitle
                title={job.title}
-               subtitle={`${job.location.city}, ${job.location.state}`}
+               subtitle={`${job.address.city}, ${job.address.state}`}
              />
              <CardText>
                {job.description}
