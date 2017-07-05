@@ -119,7 +119,7 @@ class Jobs extends Component {
                subtitle={`${job.address.city}, ${job.address.state}`}
              />
              <CardText>
-               {job.description}
+               <div dangerouslySetInnerHTML={{ __html: job.description }} />
              </CardText>
            </Card>) : '')
          }
