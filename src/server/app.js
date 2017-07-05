@@ -11,6 +11,7 @@ import genSalt from '../client/utils/salt';
 import { APP_ROOT, APP_PORT, MONGO_URI } from '../../config';
 import User from './models/user';
 
+require('babel-polyfill');
 require('dotenv').config();
 
 const app = express();
