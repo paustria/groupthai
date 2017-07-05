@@ -35,6 +35,7 @@ const initialState = {
     createdBy: '',
     updatedBy: '',
     businessCategories: '',
+    isActive: true,
   },
 };
 
@@ -308,18 +309,22 @@ class CreateJob extends Component {
         <Row>
           <Col md="12">
             <SelectField
+              multiple
               floatingLabelText="Job type*"
               value={draft.businessCategories}
               onChange={this.setJobType}
             >
               {
-                JOB_TYPES.map(type =>
-                  <MenuItem
+                JOB_TYPES.map((type) => {
+                  const busType = draft.businessCategories;
+                  return (<MenuItem
                     key={type}
                     style={jobTypes}
                     value={type}
                     primaryText={type}
-                  />)
+                    checked={busType.includes(type)}
+                  />);
+                })
               }
             </SelectField>
           </Col>
