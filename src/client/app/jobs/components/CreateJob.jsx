@@ -8,6 +8,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
+import Snackbar from 'material-ui/Snackbar';
 import { JOB_TYPES } from 'shared/constants';
 import { dateToEpoch } from 'shared/utils/time';
 
@@ -37,6 +38,7 @@ const initialState = {
     businessCategories: '',
     isActive: true,
   },
+  notificationMessage: '',
 };
 
 const styles = {
@@ -81,6 +83,7 @@ class CreateJob extends Component {
   constructor(props) {
     super(props);
     this.state = initialState;
+    this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setTitle = this.setTitle.bind(this);
     this.setDescription = this.setDescription.bind(this);
@@ -258,7 +261,6 @@ class CreateJob extends Component {
     });
   }
 
-
   setExpired(event, value) {
     const expiredDate = dateToEpoch(value);
 
@@ -271,13 +273,31 @@ class CreateJob extends Component {
   }
 
   async handleSubmit() {
-    const jobs = await postJob(this.state.draft);
-    console.log(jobs);
+    try {
+      await postJob(this.state.draft);
+
+      this.setState({
+        ...this.state,
+        notificationMessage: 'Job was created successfully.',
+      });
+    } catch (e) {
+      this.setState({
+        ...this.state,
+        notificationMessage: 'There is a problem to create job.',
+      });
+    }
+  }
+
+  handleSnackbarClose() {
+    this.setState({
+      ...this.state,
+      notificationMessage: '',
+    });
   }
 
   render() {
     const { subTitle, description, submitBtn, jobTypes } = styles;
-    const { draft } = this.state;
+    const { draft, notificationMessage } = this.state;
 
     return (
       <Container>
@@ -467,6 +487,12 @@ class CreateJob extends Component {
             />
           </Col>
         </Row>
+        <Snackbar
+          open={!!notificationMessage.length}
+          message={notificationMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleSnackbarClose}
+        />
       </Container>
     );
   }
