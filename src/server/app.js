@@ -4,6 +4,7 @@ import session from 'express-session';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import Promise from 'bluebird';
 import morgan from 'morgan';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
@@ -31,6 +32,7 @@ const MONGODB = {
   uri: MONGO_URI,
 };
 mongoose.connect(MONGODB.uri);
+mongoose.Promise = Promise;
 
 /**
 * Local auth
