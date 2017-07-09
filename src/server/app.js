@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import session from 'express-session';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
+import connectMongo from 'connect-mongo';
 import passport from 'passport';
 import Promise from 'bluebird';
 import morgan from 'morgan';
@@ -33,6 +34,19 @@ const MONGODB = {
 };
 mongoose.connect(MONGODB.uri);
 mongoose.Promise = Promise;
+
+/**
+ * Session Support
+ */
+const MongoStore = connectMongo(session);
+
+app.use(session({
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  secret: 'secrettexthere',
+  saveUninitialized: true,
+  resave: true,
+  cookie: { path: '/', httpOnly: true, secure: false, maxAge: null },
+}));
 
 /**
 * Local auth
@@ -81,14 +95,6 @@ const facebookStrategy = new FacebookStrategy({
   User.findOrCreate(profile, accessToken, (err, user) => done(err, user));
 },
 );
-
-// required for passport session
-// TODO use store
-app.use(session({
-  secret: 'secrettexthere',
-  saveUninitialized: true,
-  resave: true,
-}));
 
 passport.use(facebookStrategy);
 passport.serializeUser((user, done) => { // used to serialize the user for the session
