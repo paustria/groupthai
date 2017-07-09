@@ -73,7 +73,7 @@ const facebookStrategy = new FacebookStrategy({
   clientID: FACEBOOK_APP_ID,
   clientSecret: FACEBOOK_APP_SECRET,
   callbackURL: '/auth/callback/facebook',
-  profileFields: ['id', 'displayName', 'first_name', 'last_name', 'emails', 'photos'],
+  profileFields: ['id', 'displayName', 'first_name', 'last_name', 'email', 'photos'],
   enableProof: true,
 },
 (accessToken, refreshToken, profile, done) => {
@@ -108,10 +108,11 @@ app.use(passport.session());
 * Login facebook endpoint
 */
 app.get('/auth/facebook',
-passport.authenticate('facebook'));
+ passport.authenticate('facebook', { scope: ['email'] }),
+);
 
 app.get('/auth/callback/facebook',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
+  passport.authenticate('facebook', { scope: ['email'], failureRedirect: '/' }),
   // on success
   (req, res) => {
     res.redirect('/?facebook=true');
@@ -145,31 +146,36 @@ app.post('/register', (req, res) => {
   // TODO require name and email
   const { username, password } = req.body;
   const salt = genSalt(username.toLowerCase());
-  bcrypt.hash(password, salt, (err, hash) => {
-    if (err) return res.status(500).json({ error: true });
+  bcrypt.hash(password, salt, (hashErr, hash) => {
+    if (hashErr) return res.status(500).json({ error: true });
     const user = new User({
       name: username,
       local: { username, password: hash },
     });
-    user.save((err1) => {
-      if (err1) {
-        console.log(`Error while create new user :${err1}`);
-        if (err1.code === 11000) {
-          return res.status(403).send('Email already exists.');
+    try {
+      user.save((saveErr) => {
+        if (saveErr) {
+          if (saveErr.code == 11000) {
+            return res.status(403).send('Email already exists.');
+          }
+          console.log(`Error while create new user :${saveErr}`);
+          return res.status(500).send('Internal Server Error.');
         }
-        return res.status(500).send('Internal Server Error.');
-      }
-      console.log('Create new user');
-      req.login(user, (err2) => {
-        if (err2) {
-          console.log(`Error while login :${err2}`);
-          return res.status(401).send(err2);
-        }
-        console.log('Login Successfully');
-        return res.status(200).json({ user });
+        console.log('Create new local user');
+        req.login(user, (loginError) => {
+          if (loginError) {
+            console.log(`Error while login :${loginError}`);
+            return res.status(401).send(loginError);
+          }
+          console.log('Login Successfully');
+          return res.status(200).json({ user });
+        });
+        return null;
       });
-      return null;
-    });
+    } catch (saveErr) {
+      console.log(`Error :${saveErr}`);
+      return res.status(500).send('Internal Server Error.');
+    }
     return null;
   });
 });
