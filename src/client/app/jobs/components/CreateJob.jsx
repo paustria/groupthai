@@ -26,7 +26,7 @@ const initialState = {
     contact: {
       organizationName: '',
       name: '',
-      phone: [],
+      phone: '',
       email: '',
       website: '',
       lineID: '',
@@ -37,6 +37,29 @@ const initialState = {
     updatedBy: '',
     businessCategories: '',
     isActive: true,
+  },
+  errorMessage: {
+    title: '',
+    description: '',
+    address: {
+      address1: '',
+      address2: '',
+      city: '',
+      state: '',
+      zipcode: '',
+    },
+    contact: {
+      organizationName: '',
+      name: '',
+      phone: '',
+      email: '',
+      website: '',
+      lineID: '',
+    },
+    expiredDate: 0,
+    createdBy: '',
+    updatedBy: '',
+    businessCategories: '',
   },
   notificationMessage: '',
 };
@@ -80,199 +103,94 @@ const postJob = async (job) => {
 };
 
 class CreateJob extends Component {
-  constructor(props) {
-    super(props);
-    this.state = initialState;
-    this.handleSnackbarClose = this.handleSnackbarClose.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.setTitle = this.setTitle.bind(this);
-    this.setDescription = this.setDescription.bind(this);
-    this.setName = this.setName.bind(this);
-    this.setPhone = this.setPhone.bind(this);
-    this.setEmail = this.setEmail.bind(this);
-    this.setAddress1 = this.setAddress1.bind(this);
-    this.setAddress2 = this.setAddress2.bind(this);
-    this.setCity = this.setCity.bind(this);
-    this.setCountryState = this.setCountryState.bind(this);
-    this.setZip = this.setZip.bind(this);
-    this.setOrganization = this.setOrganization.bind(this);
-    this.setJobType = this.setJobType.bind(this);
-    this.setWebsite = this.setWebsite.bind(this);
-    this.setLine = this.setLine.bind(this);
-    this.setExpired = this.setExpired.bind(this);
-  }
+  state = initialState;
 
-  setTitle(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        title: value,
-      },
-    });
-  }
+  handleChange = (event, value, field, subfield) => {
+    let errorMessage = '';
+    let formatValue = value;
 
-  setDescription(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        description: value.replace(/(?:\r\n|\r|\n)/g, '<br />'),
-      },
-    });
-  }
+    // DatePicker event will be null.
+    // SelectField doesn't attach required attributes.
+    if ((event && event.target.attributes.getNamedItem('required')) ||
+        field === 'businessCategories') {
+      errorMessage = value.length ? '' : 'This field is required.';
+    }
 
-  setName(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        contact: {
-          ...this.state.draft.contact,
-          name: value,
+    if (subfield) {
+      this.setState({
+        draft: {
+          ...this.state.draft,
+          [field]: {
+            ...this.state.draft[field],
+            [subfield]: formatValue,
+          },
         },
-      },
-    });
-  }
-
-  setPhone(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        contact: {
-          ...this.state.draft.contact,
-          phone: [value],
+        errorMessage: {
+          ...this.state.errorMessage,
+          [field]: {
+            ...this.state.errorMessage[field],
+            [subfield]: errorMessage,
+          },
         },
+      });
+
+      return;
+    }
+
+    if (field === 'description' && value.length) {
+      formatValue = value.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    }
+
+    if (field === 'expiredDate' && !!value) {
+      formatValue = dateToEpoch(value);
+    }
+
+    this.setState({
+      draft: {
+        ...this.state.draft,
+        [field]: formatValue,
+      },
+      errorMessage: {
+        ...this.state.errorMessage,
+        [field]: errorMessage,
       },
     });
   }
 
-  setEmail(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        contact: {
-          ...this.state.draft.contact,
-          email: value,
+  validateForm() {
+    const {
+      title,
+      description,
+      contact,
+      businessCategories,
+    } = this.state.draft;
+
+    if (title.length === 0) {
+      this.setState({
+        errorMessage: {
+          ...this.state.errorMessage,
+          title: 'Job Title should not be empty.',
         },
-      },
-    });
+      });
+    }
+
+    if (
+      title.length === 0 ||
+      description.length === 0 ||
+      businessCategories.length === 0 ||
+      contact.name.length === 0
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
-  setAddress1(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        address: {
-          ...this.state.draft.address,
-          address1: value,
-        },
-      },
-    });
-  }
+  handleSubmit = async () => {
+    if (!this.validateForm()) {
+      return;
+    }
 
-  setAddress2(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        address: {
-          ...this.state.draft.address,
-          address2: value,
-        },
-      },
-    });
-  }
-
-  setCity(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        address: {
-          ...this.state.draft.address,
-          city: value,
-        },
-      },
-    });
-  }
-
-  setCountryState(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        address: {
-          ...this.state.draft.address,
-          state: value,
-        },
-      },
-    });
-  }
-
-  setZip(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        address: {
-          ...this.state.draft.address,
-          zipcode: value,
-        },
-      },
-    });
-  }
-
-  setOrganization(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        contact: {
-          ...this.state.draft.contact,
-          organizationName: value,
-        },
-      },
-    });
-  }
-
-  setJobType(event, index, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        businessCategories: value,
-      },
-    });
-  }
-
-  setWebsite(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        contact: {
-          ...this.state.draft.contact,
-          website: value,
-        },
-      },
-    });
-  }
-
-  setLine(event, value) {
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        contact: {
-          ...this.state.draft.contact,
-          line: value,
-        },
-      },
-    });
-  }
-
-  setExpired(event, value) {
-    const expiredDate = dateToEpoch(value);
-
-    this.setState({
-      draft: {
-        ...this.state.draft,
-        expiredDate,
-      },
-    });
-  }
-
-  async handleSubmit() {
     try {
       await postJob(this.state.draft);
 
@@ -288,7 +206,7 @@ class CreateJob extends Component {
     }
   }
 
-  handleSnackbarClose() {
+  handleSnackbarClose = () => {
     this.setState({
       ...this.state,
       notificationMessage: '',
@@ -297,7 +215,7 @@ class CreateJob extends Component {
 
   render() {
     const { subTitle, description, submitBtn, jobTypes } = styles;
-    const { draft, notificationMessage } = this.state;
+    const { draft, notificationMessage, errorMessage } = this.state;
 
     return (
       <Container>
@@ -309,7 +227,9 @@ class CreateJob extends Component {
               floatingLabelFixed
               hintText="Please fill job title"
               fullWidth
-              onChange={this.setTitle}
+              required
+              onChange={(event, value) => this.handleChange(event, value, 'title')}
+              errorText={errorMessage.title}
             />
           </Col>
         </Row>
@@ -322,7 +242,9 @@ class CreateJob extends Component {
               multiLine
               fullWidth
               rows={2}
-              onChange={this.setDescription}
+              required
+              onChange={(event, value) => this.handleChange(event, value, 'description')}
+              errorText={errorMessage.description}
             />
           </Col>
         </Row>
@@ -332,7 +254,9 @@ class CreateJob extends Component {
               multiple
               floatingLabelText="Job type*"
               value={draft.businessCategories}
-              onChange={this.setJobType}
+              onChange={(event, index, value) => this.handleChange(event, value, 'businessCategories')}
+              required
+              errorText={errorMessage.businessCategories}
             >
               {
                 JOB_TYPES.map((type) => {
@@ -356,7 +280,9 @@ class CreateJob extends Component {
               floatingLabelText="Contact Name*"
               floatingLabelFixed
               fullWidth
-              onChange={this.setName}
+              required
+              onChange={(event, value) => this.handleChange(event, value, 'contact', 'name')}
+              errorText={errorMessage.contact.name}
             />
           </Col>
         </Row>
@@ -368,7 +294,7 @@ class CreateJob extends Component {
               floatingLabelText="Phone"
               floatingLabelFixed
               fullWidth
-              onChange={this.setPhone}
+              onChange={(event, value) => this.handleChange(event, value, 'contact', 'phone')}
             />
           </Col>
           <Col md="6">
@@ -377,7 +303,7 @@ class CreateJob extends Component {
               floatingLabelText="Email"
               floatingLabelFixed
               fullWidth
-              onChange={this.setEmail}
+              onChange={(event, value) => this.handleChange(event, value, 'contact', 'email')}
             />
           </Col>
         </Row>
@@ -389,7 +315,7 @@ class CreateJob extends Component {
               floatingLabelText="Address 1"
               floatingLabelFixed
               fullWidth
-              onChange={this.setAddress1}
+              onChange={(event, value) => this.handleChange(event, value, 'address', 'address1')}
             />
           </Col>
         </Row>
@@ -400,7 +326,7 @@ class CreateJob extends Component {
               floatingLabelText="Address 2"
               floatingLabelFixed
               fullWidth
-              onChange={this.setAddress2}
+              onChange={(event, value) => this.handleChange(event, value, 'address', 'address2')}
             />
           </Col>
         </Row>
@@ -411,7 +337,7 @@ class CreateJob extends Component {
               floatingLabelText="City"
               floatingLabelFixed
               fullWidth
-              onChange={this.setCity}
+              onChange={(event, value) => this.handleChange(event, value, 'address', 'city')}
             />
           </Col>
           <Col md="4">
@@ -420,7 +346,7 @@ class CreateJob extends Component {
               floatingLabelText="State"
               floatingLabelFixed
               fullWidth
-              onChange={this.setCountryState}
+              onChange={(event, value) => this.handleChange(event, value, 'address', 'state')}
             />
           </Col>
           <Col md="4">
@@ -429,7 +355,7 @@ class CreateJob extends Component {
               floatingLabelText="Zipcode"
               floatingLabelFixed
               fullWidth
-              onChange={this.setZip}
+              onChange={(event, value) => this.handleChange(event, value, 'address', 'zipcode')}
             />
           </Col>
         </Row>
@@ -440,7 +366,7 @@ class CreateJob extends Component {
               floatingLabelText="Organization Name"
               floatingLabelFixed
               fullWidth
-              onChange={this.setOrganization}
+              onChange={(event, value) => this.handleChange(event, value, 'contact', 'organizationName')}
             />
           </Col>
         </Row>
@@ -451,7 +377,7 @@ class CreateJob extends Component {
               floatingLabelText="Website"
               floatingLabelFixed
               fullWidth
-              onChange={this.setWebsite}
+              onChange={(event, value) => this.handleChange(event, value, 'contact', 'website')}
             />
           </Col>
         </Row>
@@ -462,7 +388,7 @@ class CreateJob extends Component {
               floatingLabelText="Line ID"
               floatingLabelFixed
               fullWidth
-              onChange={this.setLine}
+              onChange={(event, value) => this.handleChange(event, value, 'contact', 'lineID')}
             />
           </Col>
         </Row>
@@ -473,7 +399,7 @@ class CreateJob extends Component {
               floatingLabelText="Expired Date"
               floatingLabelFixed
               fullWidth
-              onChange={this.setExpired}
+              onChange={(event, value) => this.handleChange(event, value, 'expiredDate')}
             />
           </Col>
         </Row>

@@ -15,7 +15,7 @@ const JobSchema = mongoose.Schema({
   contact: {
     organizationName: String,
     name: String,
-    phone: [String],
+    phone: String,
     email: String,
     website: String,
     lineID: String,
