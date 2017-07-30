@@ -30,7 +30,7 @@ function seedJobs() {
       contact: {
         organizationName: 'Company name',
         name: 'Phily Austria',
-        phone: ['8188888888'],
+        phone: '8188888888',
         email: 'phily@phily.com',
         website: 'www.phily.com',
         lineID: 'phily-line',
@@ -54,7 +54,7 @@ function seedJobs() {
       contact: {
         organizationName: 'Company name',
         name: 'Phily Austria',
-        phone: ['8188888888'],
+        phone: '8188888888',
         email: 'phily@phily.com',
         website: 'www.phily.com',
         lineID: 'phily-line',
@@ -78,7 +78,7 @@ function seedJobs() {
       contact: {
         organizationName: 'Company name',
         name: 'Phily Austria',
-        phone: ['8188888888'],
+        phone: '8188888888',
         email: 'phily@phily.com',
         website: 'www.phily.com',
         lineID: 'phily-line',
