@@ -2,6 +2,7 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import session from 'express-session';
 import bodyParser from 'body-parser';
+import validator from 'express-validator';
 import mongoose from 'mongoose';
 import connectMongo from 'connect-mongo';
 import passport from 'passport';
@@ -24,7 +25,8 @@ app.set('port', APP_PORT)
 .use(morgan('combined'))
 .use(express.static(`${APP_ROOT}/public`))
 .use(bodyParser.json())
-.use(bodyParser.urlencoded({ extended: true }));
+.use(bodyParser.urlencoded({ extended: true }))
+.use(validator());
 
 /**
 * Mongoose
