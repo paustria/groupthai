@@ -116,6 +116,31 @@ class CreateJob extends Component {
       errorMessage = value.length ? '' : 'This field is required.';
     }
 
+    // If phone or email was validated before, reset errorMessage when user typing again.
+    if ((subfield === 'phone' || subfield === 'email') &&
+      this.state.errorMessage.contact.phone.length
+    ) {
+      this.setState({
+        draft: {
+          ...this.state.draft,
+          [field]: {
+            ...this.state.draft[field],
+            [subfield]: formatValue,
+          },
+        },
+        errorMessage: {
+          ...this.state.errorMessage,
+          [field]: {
+            ...this.state.errorMessage[field],
+            email: errorMessage,
+            phone: errorMessage,
+          },
+        },
+      });
+
+      return;
+    }
+
     if (subfield) {
       this.setState({
         draft: {
@@ -158,32 +183,44 @@ class CreateJob extends Component {
   }
 
   validateForm() {
-    const {
-      title,
-      description,
-      contact,
-      businessCategories,
-    } = this.state.draft;
+    const requiredFields = [
+      'title',
+      'description',
+      'businessCategories',
+    ];
 
-    if (title.length === 0) {
+    const errorMessage = {};
+    errorMessage.contact = {};
+
+    const { name, phone, email } = this.state.draft.contact;
+
+    let isValid = true;
+
+    requiredFields.forEach((field) => {
+      if (this.state.draft[field].length === 0) {
+        errorMessage[field] = `${field} should not be empty.`;
+        isValid = false;
+      }
+    });
+
+    if (!name.length) {
+      errorMessage.contact.name = 'name should not be empty';
+    }
+
+    if (!phone.length && !email.length) {
+      const errorText = 'Either phone or email should not be empty.';
+      errorMessage.contact.phone = errorText;
+      errorMessage.contact.email = errorText;
+      isValid = false;
+    }
+
+    if (!isValid) {
       this.setState({
-        errorMessage: {
-          ...this.state.errorMessage,
-          title: 'Job Title should not be empty.',
-        },
+        errorMessage,
       });
     }
 
-    if (
-      title.length === 0 ||
-      description.length === 0 ||
-      businessCategories.length === 0 ||
-      contact.name.length === 0
-    ) {
-      return false;
-    }
-
-    return true;
+    return isValid;
   }
 
   handleSubmit = async () => {
@@ -295,6 +332,7 @@ class CreateJob extends Component {
               floatingLabelFixed
               fullWidth
               onChange={(event, value) => this.handleChange(event, value, 'contact', 'phone')}
+              errorText={errorMessage.contact.phone}
             />
           </Col>
           <Col md="6">
@@ -304,6 +342,7 @@ class CreateJob extends Component {
               floatingLabelFixed
               fullWidth
               onChange={(event, value) => this.handleChange(event, value, 'contact', 'email')}
+              errorText={errorMessage.contact.email}
             />
           </Col>
         </Row>
