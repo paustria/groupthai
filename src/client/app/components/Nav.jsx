@@ -32,9 +32,9 @@ const Nav = withRouter(({ user, logout }) => {
       // this.setState({ error: err.message })
     }
   };
-  const jobs = (<Link to="/jobs"><FlatButton label="Jobs" style={styles.textWhite} /></Link>);
+  const jobs = (<Link to="/jobs"><FlatButton label="หางาน" style={styles.textWhite} /></Link>);
   const registerBtn = (
-    <Link to="/register"><FlatButton label="Create Account" style={styles.textWhite} /></Link>);
+    <Link to="/register"><FlatButton label="สร้างบัญชี" style={styles.textWhite} /></Link>);
   const loggedInBtn = (
     <IconMenu
       iconButtonElement={
@@ -48,7 +48,7 @@ const Nav = withRouter(({ user, logout }) => {
         containerElement={<Link to="/dashboard" />}
         primaryText="Dashboard"
       />
-      <MenuItem onClick={onClickLogout} primaryText="Sign out" />
+      <MenuItem onClick={onClickLogout} primaryText="ออกจากระบบ" />
     </IconMenu>
   );
 
@@ -58,7 +58,7 @@ const Nav = withRouter(({ user, logout }) => {
     <div style={styles.rightMenuContainer}>
       {jobs}
       <Link to="/login">
-        <FlatButton label="Log in" style={styles.textWhite} />
+        <FlatButton label="เข้าสู่ระบบ" style={styles.textWhite} />
       </Link>
       {registerBtn}
     </div>

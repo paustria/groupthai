@@ -11,6 +11,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundSize: 'cover',
   },
   noMargin: {
     margin: '0px',
@@ -21,7 +22,7 @@ const Home = () =>
   (
     <div>
       <div style={styles.jumbotron}>
-        <h1 style={styles.noMargin}>Bringing Thais in USA together</h1>
+        <h1 style={styles.noMargin}>รวมกลุ่มคนไทยในอเมริกา</h1>
       </div>
     </div>
   );
