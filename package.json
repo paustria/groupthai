@@ -61,23 +61,34 @@
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
+    "babel-jest": "^20.0.3",
     "chai": "^3.5.0",
-    "eslint": "^3.12.2",
+    "eslint": "^4.5.0",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jest": "^20.0.3",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.8.0",
-    "nodemon": "^1.10.2"
+    "jest": "^20.0.4",
+    "nodemon": "^1.10.2",
+    "regenerator-runtime": "^0.11.0"
   },
   "scripts": {
     "clean": "rimraf public",
     "dev": "NODE_ENV=development nodemon --exec babel-node ./src/server/index.js",
-    "test": "mocha './app/**/*.spec.js' --compilers js:babel-core/register --recursive --require babel-polyfill",
+    "test": "jest",
     "prestart": "npm run clean",
     "start": "parallelshell 'npm run serverside'",
     "serverside": "webpack && webpack --config webpack.server.config.js && node prod-server.js",
     "seed": "bash -c webpack && webpack --config webpack.test.config.js ./bin/seed.js ./bin/seed.tmp.js && node ./bin/seed.tmp.js && rm -f ./bin/seed.tmp.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "jest": {
+    "verbose": true,
+    "moduleDirectories": [
+      "node_modules",
+      "src"
+    ]
+  }
 }
