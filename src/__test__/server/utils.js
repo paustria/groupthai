@@ -1,6 +1,7 @@
 //  Modified from https://github.com/elliotf/mocha-mongoose
-const config = require('../../../config');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+import Promise from 'bluebird';
+import config from '../../../config';
 
 // ensure the NODE_ENV is set to 'test'
 // this is helpful when you would like to change behavior when testing
@@ -22,6 +23,8 @@ export const connectDB = () => {
         }
         return clearDB();
       });
+
+      mongoose.Promise = Promise;
     } else {
       return clearDB();
     }
