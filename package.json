@@ -38,7 +38,7 @@
     "mongoose": "^4.10.6",
     "morgan": "^1.8.1",
     "muicss": "^0.9.16",
-    "node-sass": "^3.10.0",
+    "node-sass": "^4.13.1",
     "parallelshell": "^2.0.0",
     "passport": "^0.3.2",
     "passport-facebook": "^2.1.1",
