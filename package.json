@@ -35,7 +35,7 @@
     "less": "^2.7.2",
     "lodash": "^4.17.4",
     "material-ui": "^0.18.1",
-    "mongoose": "^4.10.6",
+    "mongoose": "^4.13.21",
     "morgan": "^1.8.1",
     "muicss": "^0.9.16",
     "node-sass": "^3.10.0",
